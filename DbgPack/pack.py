@@ -1,8 +1,5 @@
-from collections import ChainMap
-from typing import Dict, List
-from typing import ChainMap as ChainMapType
+from typing import Dict
 from DbgPack.asset import Asset
-from DbgPack.chunk import Chunk
 from DbgPack.struct_reader import BinaryStructReader
 
 
@@ -12,23 +9,24 @@ class Pack:
     A .pack file archive for storing game assets
     """
     path: str
-    chunks: List[Chunk]
-    assets: ChainMapType[str, Asset]
+    assets: Dict[str, Asset]
     
     def __init__(self, path: str):
-        self.chunks = []
+        self.assets = {}
         self.path = path
-        with BinaryStructReader(path) as reader:
-            offset = -1
-            
-            while offset != 0:
-                chunk = Chunk(reader)
-                self.chunks.append(chunk)
-                
-                offset = chunk.next_chunk_offset
-                reader.seek(offset)
-        
-        self.assets = ChainMap(*[c.assets for c in self.chunks])
+        with BinaryStructReader(path) as stream:
+            next_chunk_offset = -1
+
+            while next_chunk_offset != 0:
+                # Read a chunk
+                next_chunk_offset = stream.uintBE()
+                file_count = stream.uintBE()
+
+                for i in range(file_count):
+                    asset = Asset(stream)
+                    self.assets.update({asset.name: asset})
+
+                stream.seek(next_chunk_offset)
     
     def __repr__(self):
         return f"Pack(\"{self.path}\")"
