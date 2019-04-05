@@ -31,12 +31,15 @@ class BinaryStructReader:
     
     def seek(self, offset, whence=0):
         self.file_obj.seek(offset, whence)
-    
-    def __init__(self, file_name, buffered=0):
+
+    def read(self, n):
+        return self.file_obj.read(n)
+
+    def __init__(self, file_name):
         self.path = file_name
         # TODO: Is this the best place to open the file?
-        self.file_obj = open(file_name, 'rb', buffering=buffered)
-    
+        self.file_obj = open(file_name, 'rb')
+
     # Context Management functions
     def __enter__(self):
         return self  # .file_obj

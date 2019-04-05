@@ -2,7 +2,19 @@ from typing import Dict
 from DbgPack.struct_reader import BinaryStructReader
 from collections import namedtuple
 
-Asset = namedtuple("AssetTuple", ["name", "asset_type", "offset", "length", "crc32", "path"])
+_assetTuple = namedtuple("AssetTuple", ["name", "asset_type", "offset", "length", "crc32", "path"])
+
+
+class Asset(_assetTuple):
+    @property
+    def data(self):
+        """
+        Lazily-loaded binary contents of the asset.
+        :return:
+        """
+        with BinaryStructReader(self.path) as reader:
+            reader.seek(self.offset)
+            return reader.read(self.length)
 
 
 # TODO: Add ability to write new .pack files
@@ -26,6 +38,7 @@ class Pack:
 
                 # Read asset headers from chunk
                 for i in range(file_count):
+                    # This could go in the __init__ of Asset, but I don't think it's worth messing with namedtuple
                     name = stream.string(stream.uintBE())
                     asset_type = name.split('.')[-1]
                     offset = stream.uintBE()
