@@ -17,7 +17,6 @@ class Asset(_assetTuple):
             return reader.read(self.length)
 
 
-# TODO: Add ability to write new .pack files
 class Pack:
     """
     A .pack file archive for storing game assets
