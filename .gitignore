@@ -1,2 +1,6 @@
 venv
 *.pack
+.idea/
+DbgPack/__pycache__/
+out/
+scratch.py

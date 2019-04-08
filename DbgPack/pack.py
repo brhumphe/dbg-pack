@@ -45,7 +45,7 @@ class Pack:
                     length = reader.uintBE()
                     crc32 = reader.uintBE()
 
-                    asset = Asset(name, asset_type, offset, length, crc32, reader.path)
+                    asset = Asset(name, asset_type, offset, length, crc32, self.path)
                     self.assets.update({asset.name: asset})
 
                 reader.seek(next_chunk_offset)
