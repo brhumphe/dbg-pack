@@ -1,8 +1,8 @@
 import struct
+from io import BufferedReader
 
 
-# TODO: Should this be its own Python package?
-class BinaryStructReader:
+class BinaryStructReader(BufferedReader):
     """
     A convenience wrapper for reading binary files.
     """
@@ -15,10 +15,10 @@ class BinaryStructReader:
     
     def unpack_struct(self, fmt):
         size = struct.calcsize(fmt)
-        return struct.unpack_from(fmt, self.file_obj.read(size))
+        return struct.unpack_from(fmt, self.read(size))
     
     def _read_Struct(self, s: struct.Struct):
-        return s.unpack_from(self.file_obj.read(s.size))[0]
+        return s.unpack_from(self.read(s.size))[0]
     
     def uintLE(self):
         return self._read_Struct(self._uintLE)
@@ -28,21 +28,6 @@ class BinaryStructReader:
     
     def string(self, length, encoding="utf-8"):
         return self.unpack_struct(str(length) + 's')[0].decode(encoding)
-    
-    def seek(self, offset, whence=0):
-        self.file_obj.seek(offset, whence)
 
-    def read(self, n):
-        return self.file_obj.read(n)
-
-    def __init__(self, file_name):
-        self.path = file_name
-        # TODO: Is this the best place to open the file?
-        self.file_obj = open(file_name, 'rb')
-
-    # Context Management functions
-    def __enter__(self):
-        return self  # .file_obj
-    
-    def __exit__(self, exc_type, exc_value, exc_traceback):
-        self.file_obj.close()
+    def __init__(self, file_io):
+        super().__init__(file_io)

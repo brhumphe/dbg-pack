@@ -27,27 +27,28 @@ class Pack:
     def __init__(self, path: str):
         self.assets = {}
         self.path = path
-        with BinaryStructReader(path) as stream:
+        with open(path, 'rb') as file:
+            reader = BinaryStructReader(file)
             next_chunk_offset = -1
 
             while next_chunk_offset != 0:
                 # Read a chunk
-                next_chunk_offset = stream.uintBE()
-                file_count = stream.uintBE()
+                next_chunk_offset = reader.uintBE()
+                file_count = reader.uintBE()
 
                 # Read asset headers from chunk
                 for i in range(file_count):
                     # This could go in the __init__ of Asset, but I don't think it's worth messing with namedtuple
-                    name = stream.string(stream.uintBE())
+                    name = reader.string(reader.uintBE())
                     asset_type = name.split('.')[-1]
-                    offset = stream.uintBE()
-                    length = stream.uintBE()
-                    crc32 = stream.uintBE()
+                    offset = reader.uintBE()
+                    length = reader.uintBE()
+                    crc32 = reader.uintBE()
 
-                    asset = Asset(name, asset_type, offset, length, crc32, stream.path)
+                    asset = Asset(name, asset_type, offset, length, crc32, reader.path)
                     self.assets.update({asset.name: asset})
 
-                stream.seek(next_chunk_offset)
+                reader.seek(next_chunk_offset)
 
     def __repr__(self):
         return f"Pack(\"{self.path}\")"
