@@ -4,7 +4,7 @@ A python utility library for reading the .pack v1 files used in Planetside 2 pri
 Usage:
 
     from glob import glob
-    from DbgPack.asset_manager import AssetManager
+    from DbgPack import AssetManager
     
     test_server = r"C:\Users\Public\Daybreak Game Company\Installed Games\PlanetSide 2 Test\Resources\Assets"
     

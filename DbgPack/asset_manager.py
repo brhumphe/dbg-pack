@@ -3,7 +3,8 @@ from dataclasses import dataclass, field
 from typing import List
 from typing import ChainMap as ChainMapType
 
-from DbgPack.pack import Pack, Asset
+from DbgPack.pack import Pack
+from DbgPack.asset import Asset
 
 
 @dataclass()
