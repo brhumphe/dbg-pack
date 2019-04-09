@@ -29,5 +29,12 @@ class BinaryStructReader(BufferedReader):
     def string(self, length, encoding="utf-8"):
         return self.unpack_struct(str(length) + 's')[0].decode(encoding)
 
-    def __init__(self, file_io):
+    def __init__(self, path: str):
+        file_io = open(path, 'rb')
         super().__init__(file_io)
+
+    def __enter__(self):
+        return self
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()

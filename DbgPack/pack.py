@@ -14,8 +14,7 @@ class Pack:
     def __init__(self, path: str):
         self.assets = {}
         self.path = path
-        with open(path, 'rb') as file:
-            reader = BinaryStructReader(file)
+        with BinaryStructReader(path) as reader:
             next_chunk_offset = -1
 
             while next_chunk_offset != 0:
