@@ -1,15 +1,15 @@
 from typing import Dict
 
-from DbgPack.asset import Asset
+from DbgPack.asset1 import Asset1
 from DbgPack.struct_reader import BinaryStructReader
 
 
-class Pack:
+class Pack1:
     """
     A .pack file archive for storing game assets
     """
     path: str
-    assets: Dict[str, Asset]
+    assets: Dict[str, Asset1]
 
     def __init__(self, path: str):
         self.assets = {}
@@ -31,7 +31,7 @@ class Pack:
                     length = reader.uintBE()
                     crc32 = reader.uintBE()
 
-                    asset = Asset(name, asset_type, offset, length, crc32, self.path)
+                    asset = Asset1(name, asset_type, offset, length, crc32, self.path)
                     self.assets.update({asset.name: asset})
 
                 reader.seek(next_chunk_offset)

@@ -5,7 +5,7 @@ from DbgPack.struct_reader import BinaryStructReader
 _assetTuple = namedtuple("AssetTuple", ["name", "asset_type", "offset", "length", "crc32", "path"])
 
 
-class Asset(_assetTuple):
+class Asset1(_assetTuple):
     @property
     def data(self):
         """
