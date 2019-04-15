@@ -21,9 +21,9 @@ class Pack2(AbstractPack):
             magic = reader.read(4)
             print(magic)
             assert magic == b'PAK\x01'
-            self.asset_count = reader.uintLE()
-            self.file_size = reader.ulonglongLE()
-            self.map_offset = reader.ulonglongLE()
+            self.asset_count = reader.uint32LE()
+            self.file_size = reader.uint64LE()
+            self.map_offset = reader.uint64LE()
             
             reader.seek(self.map_offset)
             for i in range(self.asset_count):

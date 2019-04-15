@@ -21,16 +21,16 @@ class Pack1(AbstractPack):
 
             while next_chunk_offset != 0:
                 # Read a chunk
-                next_chunk_offset = reader.uintBE()
-                file_count = reader.uintBE()
+                next_chunk_offset = reader.uint32BE()
+                file_count = reader.uint32BE()
 
                 # Read asset headers from chunk
                 for i in range(file_count):
-                    name = reader.string(reader.uintBE())
+                    name = reader.string(reader.uint32BE())
                     asset_type = name.split('.')[-1]
-                    offset = reader.uintBE()
-                    length = reader.uintBE()
-                    crc32 = reader.uintBE()
+                    offset = reader.uint32BE()
+                    length = reader.uint32BE()
+                    crc32 = reader.uint32BE()
 
                     asset = Asset1(name, asset_type, offset, length, crc32, self.path)
                     self.assets.update({asset.name: asset})
