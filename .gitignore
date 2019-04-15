@@ -1,6 +1,6 @@
 venv
-*.pack
-*.pack2
+/*.pack
+/*.pack2
 .idea/
 DbgPack/__pycache__/
 out/
