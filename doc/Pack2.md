@@ -17,7 +17,11 @@ unknown: uint32
 unknown2: 128 bytes (Probably a checksum)
 
 ## Data
-Binary data, most of it compressed with zlib.
+Binary data, most of it compressed with zlib. Compressed blocks have the header:
+Unknown: 4 bytes `A1B2C3D4`
+Uncompressed size: `uint32`
+
+
 
 ## Map
 A listing of all the assets contained in the file.

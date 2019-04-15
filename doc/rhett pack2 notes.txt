@@ -1,0 +1,45 @@
+// Notes courtesy of Rhett
+
+.pack2
+Using 'Sanctuary_x64_0.pack2'
+
+[head]
+Little Endian
+
+> 0x00
+PAK 01								- Magic
+29 00 00 00 : 41					- Asset Amount
+20 88 0E 00 00 00 00 00	: 952352	- Pack Length
+00 83 0E 00 00 00 00 00 : 951040	- Map Offset
+00 01 00 00 00 00 00 00 : 256		- ?
+
+(Checksum of some kind to prevent cheating? Not needed fo unpacking or packing on the PTS)
+> 0x08
+73 42 0F 63 91 88 AA 45 EF 17 C9 6F C2 7A AE FC
+2B B6 74 D0 11 76 C4 F6 4C 26 B1 A3 E3 36 3E F0
+3F 79 DA F0 AF A4 6B 57 7C 4D EF A5 45 D4 ED C7
+6C 58 DF 20 C6 DF B8 5B 2D AB B3 9A FF B3 F2 1B
+88 08 32 AE A6 40 34 1C A1 36 34 6B 5B 84 C2 4E
+F5 8E 64 E2 50 45 76 B3 D3 56 56 29 28 09 59 15
+6F 47 43 98 17 3E B9 3A 64 D9 7B B8 55 A8 81 9E
+55 A3 56 8F EB A7 C8 63 33 12 44 20 85 DC 76 0A
+
+
+[data]
+Big Endian
+
+> 0x200
+A1 B2 C3 D4			- Indicates compression ? Only in front of compressed assets
+00 00 01 DD : 477	- Unpacked Size
+(ZLIB data)
+
+
+[map]
+Little Endian
+
+> 0xE8300
+F3 62 01 0D 88 DB 26 00				- Name Hash (Name is UPPERCASE)
+00 94 02 00 00 00 00 00 : 168960	- Asset Offset
+97 01 00 00 00 00 00 00	: 407		- Size of data
+01 00 00 00	: 1						- IsZipped (10: Unzipped, 01: Zipped)
+99 DA 49 98 : 2554976921			- Crc32

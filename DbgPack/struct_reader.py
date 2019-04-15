@@ -12,6 +12,7 @@ class BinaryStructReader(BufferedReader):
     
     # Little-endian structs
     _uintLE = struct.Struct('<I')
+    _uLL_LE = struct.Struct('<Q')
     
     def unpack_struct(self, fmt):
         size = struct.calcsize(fmt)
@@ -29,6 +30,9 @@ class BinaryStructReader(BufferedReader):
     
     def uintBE(self):
         return self._read_Struct(self._uintBE)
+    
+    def ulonglongLE(self):
+        return self._read_Struct(self._uLL_LE)
     
     def string(self, length, encoding="utf-8"):
         return self.unpack_struct(str(length) + 's')[0].decode(encoding)
