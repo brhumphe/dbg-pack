@@ -1,14 +1,14 @@
-from DbgPack import Pack
+from DbgPack import Pack1
 
 
-def test_load_pack():
-    pack = Pack("sample.pack")
+def test_load_pack1():
+    pack = Pack1("sample.pack")
     assert len(pack) == 235
     assert pack.path == "sample.pack"
 
 
-def test_load_asset():
-    pack = Pack("sample.pack")
+def test_load_asset1():
+    pack = Pack1("sample.pack")
     asset1 = pack['AbilityClasses.txt']
     assert asset1.asset_type == 'txt'
     assert asset1.offset == 8192

@@ -1,10 +1,11 @@
 from typing import Dict
+from .abc import AbstractPack
 
 from DbgPack.asset1 import Asset1
 from DbgPack.struct_reader import BinaryStructReader
 
 
-class Pack1:
+class Pack1(AbstractPack):
     """
     A .pack file archive for storing game assets
     """
@@ -12,6 +13,7 @@ class Pack1:
     assets: Dict[str, Asset1]
 
     def __init__(self, path: str):
+        super().__init__(path)
         self.assets = {}
         self.path = path
         with BinaryStructReader(path) as reader:
@@ -24,7 +26,6 @@ class Pack1:
 
                 # Read asset headers from chunk
                 for i in range(file_count):
-                    # This could go in the __init__ of Asset, but I don't think it's worth messing with namedtuple
                     name = reader.string(reader.uintBE())
                     asset_type = name.split('.')[-1]
                     offset = reader.uintBE()

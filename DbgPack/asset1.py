@@ -1,11 +1,17 @@
-from collections import namedtuple
-
-from DbgPack.struct_reader import BinaryStructReader
-
-_assetTuple = namedtuple("AssetTuple", ["name", "asset_type", "offset", "length", "crc32", "path"])
+from dataclasses import dataclass
+from .abc import AbstractAsset
+from .struct_reader import BinaryStructReader
 
 
-class Asset1(_assetTuple):
+@dataclass
+class Asset1(AbstractAsset):
+    name: str
+    asset_type: str
+    offset: int
+    length: int
+    crc32: int
+    path: str
+
     @property
     def data(self):
         """
