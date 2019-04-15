@@ -1,5 +1,5 @@
 venv
-*.pack
+/*.pack
 .idea/
 DbgPack/__pycache__/
 out/
