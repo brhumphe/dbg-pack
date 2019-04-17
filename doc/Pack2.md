@@ -26,8 +26,11 @@ Uncompressed size: `uint32`
 ## Map
 A listing of all the assets contained in the file.
 
-Asset name hash: crc64 hash (Name is UPPERCASE)
+Asset name hash: crc64 checksum of the UPPERCASE filename
 Asset offset: unsigned long
 Asset data size: unsigned long
 IsZipped: uint32 (1 for compressed, 2 for uncompressed)
 crc32: uint32
+
+## File names
+The plaintext names are stored in their own asset called `{NAMELIST}`, hash 0x4137cc65bd97fd30

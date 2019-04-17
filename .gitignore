@@ -5,3 +5,4 @@ venv
 DbgPack/__pycache__/
 out/
 scratch.py
+.pytest_cache

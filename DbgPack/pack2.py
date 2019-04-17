@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, List
 
 from .struct_reader import BinaryStructReader
 from .abc import AbstractPack
@@ -11,8 +11,6 @@ class Pack2(AbstractPack):
     asset_count: int
     file_size: int
     map_offset: int
-    unknown1: int
-    unknownChecksum: bytes
     assets: Dict[str, Asset2]
     
     def __init__(self, path: str):
@@ -26,6 +24,7 @@ class Pack2(AbstractPack):
             self.map_offset = reader.uint64LE()
             
             reader.seek(self.map_offset)
+            self.raw_assets = {}
             for i in range(self.asset_count):
-                print(Asset2(reader, path))
-                
+                asset = Asset2(reader, path)
+                self.raw_assets.update({int(asset.name_hash): asset})
