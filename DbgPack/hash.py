@@ -139,6 +139,9 @@ class CRC64(object):
         self.crc = 0xffffffffffffffff
     
     def append(self, buffer):
+        if type(buffer) == bytes:
+            buffer = str(buffer)
+            
         for c in buffer.strip().upper():
             tab_index = ((self.crc & 0xff) ^ ord(c)) & 0xFF
             self.crc = crc_table[tab_index] ^ (self.crc >> 8)

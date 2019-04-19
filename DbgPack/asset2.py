@@ -12,6 +12,7 @@ class Asset2(AbstractAsset):
     isZipped: bool
     crc32: int
     path: str
+    name: str = ""
     
     def __init__(self, reader: BinaryStructReader, path: str):
         self.path = path

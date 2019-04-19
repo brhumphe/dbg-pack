@@ -38,7 +38,7 @@ class Pack1(AbstractPack):
                 reader.seek(next_chunk_offset)
 
     def __repr__(self):
-        return f"Pack(\"{self.path}\")"
+        return f"Pack1(\"{self.path}\")"
 
     def __getitem__(self, item):
         return self.assets[item]
