@@ -152,7 +152,7 @@ class CRC64(object):
 def crc64(buffer):
     crc = CRC64()
     if type(buffer) == bytes:
-            buffer = str(buffer)
+            buffer = str(buffer, encoding='ascii')
 
     crc.append(buffer)
     

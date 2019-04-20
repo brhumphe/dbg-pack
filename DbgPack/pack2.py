@@ -39,8 +39,8 @@ class Pack2(AbstractPack):
         self.assets = {}
         namelist = self.raw_assets[0x4137cc65bd97fd30].data.strip().split(b'\n')
         for name in namelist:
-            # name = str(name, encoding='ascii')
-            name_hash = crc64(str(name, encoding='ascii'))
+            name = str(name, encoding='ascii')
+            name_hash = crc64(name)
             try:
                 asset = self.raw_assets[name_hash]
                 asset.name = name
