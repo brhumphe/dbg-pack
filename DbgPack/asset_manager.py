@@ -15,7 +15,6 @@ class AssetManager:
     @staticmethod
     def load_pack(path: str):
         pack_type = Path(path).suffix
-        print(pack_type)
         if pack_type == '.pack':
             return Pack1(path)
         elif pack_type == '.pack2':

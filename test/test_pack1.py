@@ -22,7 +22,7 @@ def test_load_asset1():
     assert asset2.crc32 == 4092021062
 
 
-def test_asset_manager():
+def test_asset1_manager():
     manager = AssetManager(["sample.pack"])
     asset1 = manager['AbilityClasses.txt']
     assert asset1.asset_type == 'txt'

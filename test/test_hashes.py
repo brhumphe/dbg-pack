@@ -6,4 +6,3 @@ def test_crc64():
         for line in file:
             hashed, filename = line.split(':')
             assert int(hashed, 16) == crc64(filename)
-            

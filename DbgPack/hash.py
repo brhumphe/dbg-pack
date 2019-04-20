@@ -133,15 +133,14 @@ crc_table = [
 ]
 
 
+# TODO: MAke this a single function instead of a class
 class CRC64(object):
     
     def __init__(self):
         self.crc = 0xffffffffffffffff
     
     def append(self, buffer):
-        if type(buffer) == bytes:
-            buffer = str(buffer)
-            
+
         for c in buffer.strip().upper():
             tab_index = ((self.crc & 0xff) ^ ord(c)) & 0xFF
             self.crc = crc_table[tab_index] ^ (self.crc >> 8)
@@ -152,6 +151,9 @@ class CRC64(object):
 
 def crc64(buffer):
     crc = CRC64()
+    if type(buffer) == bytes:
+            buffer = str(buffer)
+
     crc.append(buffer)
     
     return crc.finish()
@@ -170,4 +172,3 @@ if __name__ == '__main__':
             print(filename, filename.upper())
             print(hex(int(expected, 16)))
             print(hex(crc64(filename)))
-            
