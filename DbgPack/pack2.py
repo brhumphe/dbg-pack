@@ -37,15 +37,16 @@ class Pack2(AbstractPack):
     def _update_asset_names(self):
         # Build assets dict with proper names
         self.assets = {}
-        namelist = self.raw_assets[0x4137cc65bd97fd30].data.split()
+        namelist = self.raw_assets[0x4137cc65bd97fd30].data.strip().split(b'\n')
         for name in namelist:
-            name = str(name, encoding='ascii')
-            name_hash = crc64(name)
+            # name = str(name, encoding='ascii')
+            name_hash = crc64(str(name, encoding='ascii'))
             try:
                 asset = self.raw_assets[name_hash]
                 asset.name = name
                 self.assets.update({name: asset})
             except KeyError:
+                # TODO: Log this error instead of just printing to console.
                 print("Could not find", name, "in", self.path)
                 pass
 
