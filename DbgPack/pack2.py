@@ -62,6 +62,8 @@ class Pack2(AbstractPack):
             namelist = self.raw_assets[0x4137cc65bd97fd30].data.strip().split(b'\n')
         for name in namelist:
             name_hash = crc64(name)
+            if type(name) == bytes:
+                name = name.decode("ascii")
             try:
                 asset = self.raw_assets[name_hash]
                 asset.name = name
@@ -78,9 +80,14 @@ class Pack2(AbstractPack):
 
     def __getitem__(self, item):
         if type(item) == str:
-            return self.assets[item]
-        else:
+            try:
+                return self.assets[item]
+            except KeyError:
+                return self.raw_assets[crc64(item)]
+        elif type(item) == int:
             return self.raw_assets[item]
+        else:
+            raise KeyError
 
     def __contains__(self, item):
         try:

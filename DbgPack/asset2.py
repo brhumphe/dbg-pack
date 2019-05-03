@@ -7,7 +7,7 @@ import zlib
 @dataclass()
 class Asset2(AbstractAsset):
     name_hash: int
-    file_offset: int
+    offset: int
     size: int
     crc32: int
     path: str
@@ -16,7 +16,7 @@ class Asset2(AbstractAsset):
     def __init__(self, reader: BinaryStructReader, path: str):
         self.path = path
         self.name_hash = reader.uint64LE()
-        self.file_offset = reader.uint64LE()
+        self.offset = reader.uint64LE()
         self.size = reader.uint64LE()
         self._zipped_flag = reader.uint32LE()
         self.crc32 = reader.uint32LE()
@@ -24,7 +24,7 @@ class Asset2(AbstractAsset):
     @property
     def isZipped(self) -> bool:
         with BinaryStructReader(self.path) as reader:
-            reader.seek(self.file_offset)
+            reader.seek(self.offset)
             if reader.peek(1)[:4] == b'\xa1\xb2\xc3\xd4':
                 return True
             else:
@@ -33,7 +33,7 @@ class Asset2(AbstractAsset):
     @property
     def data(self):
         with BinaryStructReader(self.path) as reader:
-            reader.seek(self.file_offset)
+            reader.seek(self.offset)
             if not self.isZipped:
                 return reader.read(self.size)
 
@@ -41,3 +41,6 @@ class Asset2(AbstractAsset):
             unpacked_size = reader.uint32BE()
             compressed = reader.read(self.size)
             return zlib.decompress(compressed)
+
+    def __len__(self):
+        return self.size

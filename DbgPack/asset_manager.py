@@ -7,6 +7,7 @@ from DbgPack import Pack1, Pack2
 from DbgPack.abc import AbstractPack, AbstractAsset
 
 
+# TODO: Decide how to handle name collisions in pack files
 @dataclass()
 class AssetManager:
     packs: List[AbstractPack] = field(default_factory=list)
