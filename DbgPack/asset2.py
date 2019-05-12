@@ -19,16 +19,8 @@ class Asset2(AbstractAsset):
         self.offset = reader.uint64LE()
         self.size = reader.uint64LE()
         self._zipped_flag = reader.uint32LE()
+        self.isZipped = (self._zipped_flag == 0x11)
         self.crc32 = reader.uint32LE()
-
-    @property
-    def isZipped(self) -> bool:
-        with BinaryStructReader(self.path) as reader:
-            reader.seek(self.offset)
-            if reader.peek(1)[:4] == b'\xa1\xb2\xc3\xd4':
-                return True
-            else:
-                return False
     
     @property
     def data(self):
@@ -38,6 +30,7 @@ class Asset2(AbstractAsset):
                 return reader.read(self.size)
 
             compression = reader.read(4)
+            assert compression == b'\xa1\xb2\xc3\xd4'
             unpacked_size = reader.uint32BE()
             compressed = reader.read(self.size)
             return zlib.decompress(compressed)

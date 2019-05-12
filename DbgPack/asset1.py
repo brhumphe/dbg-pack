@@ -8,7 +8,7 @@ class Asset1(AbstractAsset):
     name: str
     asset_type: str
     offset: int
-    length: int
+    size: int
     crc32: int
     path: str
 
@@ -20,7 +20,7 @@ class Asset1(AbstractAsset):
         """
         with BinaryStructReader(self.path) as reader:
             reader.seek(self.offset)
-            return reader.read(self.length)
+            return reader.read(self.size)
     
     def __len__(self):
-        return self.length
+        return self.size
