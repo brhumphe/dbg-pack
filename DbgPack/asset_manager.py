@@ -1,19 +1,28 @@
 from collections import ChainMap
 from dataclasses import dataclass, field
-from typing import List
-from typing import ChainMap as ChainMapType
+from pathlib import Path
+from typing import List, ChainMap as ChainMapType
 
-from DbgPack.pack import Pack
-from DbgPack.asset import Asset
+from DbgPack import Pack1, Pack2
+from DbgPack.abc import AbstractPack, AbstractAsset
 
 
+# TODO: Decide how to handle name collisions in pack files
 @dataclass()
 class AssetManager:
-    packs: List[Pack] = field(default_factory=list)
-    assets: ChainMapType[str, Asset] = field(default_factory=ChainMap, repr=False, init=False)
+    packs: List[AbstractPack] = field(default_factory=list)
+    assets: ChainMapType[str, AbstractAsset] = field(default_factory=ChainMap, repr=False, init=False)
+
+    @staticmethod
+    def load_pack(path: str):
+        pack_type = Path(path).suffix
+        if pack_type == '.pack':
+            return Pack1(path)
+        elif pack_type == '.pack2':
+            return Pack2(path)
 
     def __init__(self, packs: List[str]):
-        self.packs = [Pack(path) for path in packs]
+        self.packs = [self.load_pack(path) for path in packs]
         self.assets = ChainMap(*[p.assets for p in self.packs])
 
     def __getitem__(self, item):

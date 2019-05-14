@@ -8,10 +8,12 @@ class BinaryStructReader(BufferedReader):
     """
     path: str
     # Big-endian structs
-    _uintBE = struct.Struct('>I')
+    _uint32BE = struct.Struct('>I')
+    _uint64BE = struct.Struct('>Q')
     
     # Little-endian structs
-    _uintLE = struct.Struct('<I')
+    _uint32LE = struct.Struct('<I')
+    _uint64LE = struct.Struct('<Q')
     
     def unpack_struct(self, fmt):
         size = struct.calcsize(fmt)
@@ -24,11 +26,17 @@ class BinaryStructReader(BufferedReader):
         else:
             return unpacked
     
-    def uintLE(self):
-        return self._read_Struct(self._uintLE)
+    def uint32LE(self):
+        return self._read_Struct(self._uint32LE)
     
-    def uintBE(self):
-        return self._read_Struct(self._uintBE)
+    def uint32BE(self):
+        return self._read_Struct(self._uint32BE)
+    
+    def uint64LE(self):
+        return self._read_Struct(self._uint64LE)
+    
+    def uint64BE(self):
+        return self._read_Struct(self._uint64BE)
     
     def string(self, length, encoding="utf-8"):
         return self.unpack_struct(str(length) + 's')[0].decode(encoding)
@@ -42,3 +50,6 @@ class BinaryStructReader(BufferedReader):
     
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.close()
+        
+    def __getitem__(self, item):
+        return self.unpack_struct(item)
