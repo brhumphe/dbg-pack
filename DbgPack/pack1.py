@@ -1,7 +1,7 @@
 from typing import Dict
 from .abc import AbstractPack
 
-from DbgPack.asset1 import Asset1
+from DbgPack.asset import Asset
 from DbgPack.struct_reader import BinaryStructReader
 
 
@@ -10,7 +10,7 @@ class Pack1(AbstractPack):
     A .pack file archive for storing game assets
     """
     path: str
-    assets: Dict[str, Asset1]
+    assets: Dict[str, Asset]
 
     def __init__(self, path: str):
         super().__init__(path)
@@ -32,7 +32,7 @@ class Pack1(AbstractPack):
                     length = reader.uint32BE()
                     crc32 = reader.uint32BE()
 
-                    asset = Asset1(name, asset_type, offset, length, crc32, self.path)
+                    asset = Asset(name=name, offset=offset, length=length, crc32=crc32, path=self.path)
                     self.assets.update({asset.name: asset})
 
                 reader.seek(next_chunk_offset)

@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field
 from typing import Dict, List, Union
 
+from DbgPack import Asset
 from .struct_reader import BinaryStructReader
 from .abc import AbstractPack
-from .asset2 import Asset2
 from .hash import crc64
 
 
@@ -12,8 +12,8 @@ class Pack2(AbstractPack):
     asset_count: int
     file_size: int
     map_offset: int
-    assets: Dict[str, Asset2]
-    raw_assets: Dict[int, Asset2]
+    assets: Dict[str, Asset]
+    raw_assets: Dict[int, Asset]
     path: str
     _namelist: List[Union[bytes, str]] = field(default_factory=list, init=False, repr=False)
 
@@ -43,7 +43,12 @@ class Pack2(AbstractPack):
             reader.seek(self.map_offset)
             self.raw_assets = {}
             for i in range(self.asset_count):
-                asset = Asset2(reader, path)
+                name_hash = reader.uint64LE()
+                offset = reader.uint64LE()
+                size = reader.uint64LE()
+                zipped_flag = reader.uint32LE()
+                crc32 = reader.uint32LE()
+                asset = Asset(name_hash=name_hash, crc32=crc32, offset=offset, length=size, path=self.path)
                 self.raw_assets.update({int(asset.name_hash): asset})
 
         self.assets = {}
@@ -56,10 +61,11 @@ class Pack2(AbstractPack):
         :return:
         """
         if not namelist and 0x4137cc65bd97fd30 not in self:
+            # TODO: If no namelist contained in pack, fallback to list of known filenames.
             return
     
         if not namelist:
-            namelist = self.raw_assets[0x4137cc65bd97fd30].data.strip().split(b'\n')
+            namelist = self.raw_assets[crc64('{NAMELIST}')].data.strip().split(b'\n')
         for name in namelist:
             name_hash = crc64(name)
             if type(name) == bytes:
