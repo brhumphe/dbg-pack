@@ -150,6 +150,11 @@ class CRC64(object):
 
 
 def crc64(buffer):
+    """
+    Calculates CRC64 hash of the contents of buffer as an uppercase string.
+    :param buffer:
+    :return:
+    """
     crc = CRC64()
     if type(buffer) == bytes:
             buffer = str(buffer, encoding='ascii')
