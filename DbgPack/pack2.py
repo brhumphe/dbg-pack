@@ -4,7 +4,6 @@ from typing import Dict, List, Union
 from DbgPack import Asset
 from .struct_reader import BinaryStructReader
 from .abc import AbstractPack
-from .asset2 import Asset2
 from .hash import crc64
 
 
