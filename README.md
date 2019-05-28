@@ -22,7 +22,7 @@ Read the binary contents of an `Asset` via the `.data` property:
     binary_data = asset.data
     
 ## Pack 2
-Introduced with the DX11 update in April 2019, the pack2 format is far more resilient to 
-exploits that rely on modification of assets. The interface is the same, but the names of
+Introduced with the DX11 update in April 2019, the pack2 format includes far more robust
+support for **detecting** modified game files. The interface is the same, but the names of
 the files are no longer included in the .pack2 file, so it is necessary to supply your own
 via the `namelist=` parameter.
