@@ -3,15 +3,16 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, ChainMap as ChainMapType
 
-from DbgPack import Pack1, Pack2
-from DbgPack.abc import AbstractPack, AbstractAsset
+from DbgPack import Pack1, Pack2, Asset
+from DbgPack.abc import AbstractPack
 
 
 # TODO: Decide how to handle name collisions in pack files
+# TODO: Write unit tests for AssetManager
 @dataclass()
 class AssetManager:
     packs: List[AbstractPack] = field(default_factory=list)
-    assets: ChainMapType[str, AbstractAsset] = field(default_factory=ChainMap, repr=False, init=False)
+    assets: ChainMapType[str, Asset] = field(default_factory=ChainMap, repr=False, init=False)
 
     @staticmethod
     def load_pack(path: str):

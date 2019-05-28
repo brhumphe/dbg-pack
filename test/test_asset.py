@@ -30,6 +30,8 @@ def test_pack2_read():
                path='data_x64_0_with_namelist.pack2', name='AbilityClasses.txt')
     assert a1 == a2
     assert a2.name_hash == crc64(a2.name)
+    # The way the hashes are calculated changed at some point. Need to figure out how.
+    # assert a1.crc32 == binascii.crc32(a1.data)
 
 
 def test_from_bytes():

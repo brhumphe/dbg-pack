@@ -25,6 +25,8 @@ def test_load_pack2():
     # assert asset1b.asset_type == 'txt'
     # assert asset1b.offset == 512
     # # assert len(asset1) == 149
+
+    # TODO: Figure out what they changed the crc32 hashes to. They don't match the python crc32
     # assert asset1b.crc32 == 1187660072
     
     pack2v2 = Pack2("data_x64_0_without_namelist.pack2")
