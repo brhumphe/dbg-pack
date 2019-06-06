@@ -28,6 +28,8 @@ class Asset:
     def data(self):
         if self._data:
             return self._data
+        if self.length == 0:
+            return bytes()
 
         with BinaryStructReader(self.path) as reader:
             reader.seek(self.offset)
