@@ -62,6 +62,9 @@ class Pack2(AbstractPack):
         """
         if not namelist and 0x4137cc65bd97fd30 not in self:
             # TODO: If no namelist contained in pack, fallback to list of known filenames.
+            for asset in self.raw_assets.values():
+                self.assets.update({f'{asset.name_hash:016x}.bin': asset})
+
             return
     
         if not namelist:
