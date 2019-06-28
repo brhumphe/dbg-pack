@@ -1,3 +1,4 @@
+import itertools
 from dataclasses import dataclass, field
 from typing import Dict, List, Union
 
@@ -60,32 +61,76 @@ class Pack2(AbstractPack):
         :param namelist:
         :return:
         """
-        if not namelist and 0x4137cc65bd97fd30 not in self:
-            # TODO: If no namelist contained in pack, fallback to list of known filenames.
 
-            # TODO: Apply this to all assets with missing names, even if they have a namelist -- Rhett
-            for asset in self.raw_assets.values():
-                self.assets.update({str(asset.name_hash): asset})
+        nameset = set()
+        used_names = []
 
-            return
-    
-        if not namelist:
-            namelist = self.raw_assets[crc64('{NAMELIST}')].data.strip().split(b'\n')
-        for name in namelist:
+        print(f'Pack contains {self.asset_count} assets.')
+
+        # Check for internal namelist
+        # -- Append to nameset
+        if crc64('{NAMELIST}') in self:
+            print('Using internal namelist')
+
+            names = self.raw_assets[crc64('{NAMELIST}')].data.strip().split(b'\n')
+            nameset.update([n.decode('ascii') for n in names])
+
+        # Check for external namelist
+        # -- Append to nameset
+        if namelist:
+            print('Using external namelist')
+            nameset.update(namelist)
+
+        # Apply names to files
+        for name in nameset:
             name_hash = crc64(name)
-            if type(name) == bytes:
-                name = name.decode("ascii")
+
+            if len(self.assets) != len(used_names):
+                print('Mismatch')
+                pass
+
             try:
                 asset = self.raw_assets[name_hash]
                 asset.name = name
                 self.assets.update({name: asset})
+                used_names.append(name)
             except KeyError:
-                # TODO: Log this error instead of just printing to console.
-                # TODO: Using a master namelist will spam this error. Change this to internal namelist errors instead -- Rhett
-                print("Could not find", name, "in", self.path)
+                # print("Could not find", name, "in", self.path)
                 pass
 
-        # TODO: Identify assets which were not contained in the name list
+        # Remaining files will use their hash as the key instead of a name
+
+        # TODO: Check if we are repeating some assets
+        # NOTE: When storing used hashes in a set, it has less items than self.assets for some reason -- Rhett
+        print(f'{len(self.assets)} : {len(set(used_names))} : {len(set(crc64(x) for x in used_names))}')
+
+        print(set(self.assets.keys()) - set(self.raw_assets[crc64(x)].name for x in used_names) )
+        # if not namelist and 0x4137cc65bd97fd30 not in self:
+        #     # TODO: If no namelist contained in pack, fallback to list of known filenames.
+        #
+        #     # TODO: Apply this to all assets with missing names, even if they have a namelist -- Rhett
+        #     for asset in self.raw_assets.values():
+        #         self.assets.update({str(asset.name_hash): asset})
+        #
+        #     return
+        #
+        # if not namelist:
+        #     namelist = self.raw_assets[crc64('{NAMELIST}')].data.strip().split(b'\n')
+        # for name in namelist:
+        #     name_hash = crc64(name)
+        #     if type(name) == bytes:
+        #         name = name.decode("ascii")
+        #     try:
+        #         asset = self.raw_assets[name_hash]
+        #         asset.name = name
+        #         self.assets.update({name: asset})
+        #     except KeyError:
+        #         # TODO: Log this error instead of just printing to console.
+        #         # TODO: Using a master namelist will spam this error. Change this to internal namelist errors instead -- Rhett
+        #         print("Could not find", name, "in", self.path)
+        #         pass
+        #
+        # # TODO: Identify assets which were not contained in the name list
 
     def __repr__(self):
         return f"Pack2(\"{self.path}\")"
