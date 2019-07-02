@@ -1,11 +1,11 @@
-import itertools
 from dataclasses import dataclass, field
 from typing import Dict, List, Union
 
 from DbgPack import Asset
-from .struct_reader import BinaryStructReader
+
 from .abc import AbstractPack
 from .hash import crc64
+from .struct_reader import BinaryStructReader
 
 
 @dataclass()
@@ -62,75 +62,52 @@ class Pack2(AbstractPack):
         :return:
         """
 
-        nameset = set()
-        used_names = []
+        # TODO: Decide whether to store the hashes alongside the names in the master list
+        # TODO: Store the correct capitalization in the master namelist.
+        # TODO: Move these to the namelist project
+        name_dict = {}
+        used_hashes = []
 
         print(f'Pack contains {self.asset_count} assets.')
 
         # Check for internal namelist
-        # -- Append to nameset
         if crc64('{NAMELIST}') in self:
             print('Using internal namelist')
 
             names = self.raw_assets[crc64('{NAMELIST}')].data.strip().split(b'\n')
-            nameset.update([n.decode('ascii') for n in names])
+            for n in names:
+                hash_ = crc64(n)
+                name_dict[hash_] = n.decode('utf-8')
 
         # Check for external namelist
-        # -- Append to nameset
         if namelist:
             print('Using external namelist')
-            nameset.update(namelist)
+            for name in namelist:
+                hash_ = crc64(name)
+                name_dict[hash_] = name
 
-        # Apply names to files
-        for name in nameset:
-            name_hash = crc64(name)
-
-            if len(self.assets) != len(used_names):
-                print('Mismatch')
-                pass
-
+        # Apply names to assets
+        for name_hash, name in name_dict.items():
             try:
                 asset = self.raw_assets[name_hash]
                 asset.name = name
                 self.assets.update({name: asset})
-                used_names.append(name)
+
+                used_hashes.append(name_hash)
+
             except KeyError:
+                # This error is spammed when using the master namelist
+                # TODO: Log this error instead of just printing to console
                 # print("Could not find", name, "in", self.path)
                 pass
 
-        # Remaining files will use their hash as the key instead of a name
-
-        # TODO: Check if we are repeating some assets
-        # NOTE: When storing used hashes in a set, it has less items than self.assets for some reason -- Rhett
-        print(f'{len(self.assets)} : {len(set(used_names))} : {len(set(crc64(x) for x in used_names))}')
-
-        print(set(self.assets.keys()) - set(self.raw_assets[crc64(x)].name for x in used_names) )
-        # if not namelist and 0x4137cc65bd97fd30 not in self:
-        #     # TODO: If no namelist contained in pack, fallback to list of known filenames.
-        #
-        #     # TODO: Apply this to all assets with missing names, even if they have a namelist -- Rhett
-        #     for asset in self.raw_assets.values():
-        #         self.assets.update({str(asset.name_hash): asset})
-        #
-        #     return
-        #
-        # if not namelist:
-        #     namelist = self.raw_assets[crc64('{NAMELIST}')].data.strip().split(b'\n')
-        # for name in namelist:
-        #     name_hash = crc64(name)
-        #     if type(name) == bytes:
-        #         name = name.decode("ascii")
-        #     try:
-        #         asset = self.raw_assets[name_hash]
-        #         asset.name = name
-        #         self.assets.update({name: asset})
-        #     except KeyError:
-        #         # TODO: Log this error instead of just printing to console.
-        #         # TODO: Using a master namelist will spam this error. Change this to internal namelist errors instead -- Rhett
-        #         print("Could not find", name, "in", self.path)
-        #         pass
-        #
-        # # TODO: Identify assets which were not contained in the name list
+        # Remaining assets will use their hash as the key instead of a name
+        remaining_assets = self.asset_count - len(self.assets)
+        if remaining_assets:
+            print(f'{remaining_assets} missing names')
+            for hash_ in self.raw_assets.keys() - set(used_hashes):
+                asset = self.raw_assets[hash_]
+                self.assets[str(hash_)] = asset
 
     def __repr__(self):
         return f"Pack2(\"{self.path}\")"
