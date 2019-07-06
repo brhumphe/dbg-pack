@@ -61,6 +61,7 @@ class Pack2(AbstractPack):
         :param namelist:
         :return:
         """
+        # TODO: All the commented out print statements are pretty annoying. Switch to a better way to log them
 
         # TODO: Decide whether to store the hashes alongside the names in the master list
         # TODO: Store the correct capitalization in the master namelist.
@@ -68,11 +69,11 @@ class Pack2(AbstractPack):
         name_dict = {}
         used_hashes = []
 
-        print(f'Pack contains {self.asset_count} assets.')
+        # XXX: print(f'Pack contains {self.asset_count} assets.')
 
         # Check for internal namelist
         if crc64('{NAMELIST}') in self:
-            print('Using internal namelist')
+            # XXX: print('Using internal namelist')
 
             names = self.raw_assets[crc64('{NAMELIST}')].data.strip().split(b'\n')
             for n in names:
@@ -81,7 +82,7 @@ class Pack2(AbstractPack):
 
         # Check for external namelist
         if namelist:
-            print('Using external namelist')
+            # XXX: print('Using external namelist')
             for name in namelist:
                 hash_ = crc64(name)
                 name_dict[hash_] = name
@@ -97,14 +98,13 @@ class Pack2(AbstractPack):
 
             except KeyError:
                 # This error is spammed when using the master namelist
-                # TODO: Log this error instead of just printing to console
-                # print("Could not find", name, "in", self.path)
+                # XXX: print("Could not find", name, "in", self.path)
                 pass
 
         # Remaining assets will use their hash as the key instead of a name
         remaining_assets = self.asset_count - len(self.assets)
         if remaining_assets:
-            print(f'{remaining_assets} missing names')
+            # XXX: print(f'{remaining_assets} missing names')
             for hash_ in self.raw_assets.keys() - set(used_hashes):
                 asset = self.raw_assets[hash_]
                 self.assets[str(hash_)] = asset
