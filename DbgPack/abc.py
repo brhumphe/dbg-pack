@@ -15,6 +15,7 @@ class AbstractAsset(ABC):
     def data(self) -> bytes:
         pass
 
+    @abstractmethod
     def __len__(self):
         return self.size
 
@@ -31,8 +32,21 @@ class AbstractPack(ABC):
         self.path = path
         self.name = self.path.stem
 
+    @abstractmethod
     def __repr__(self):
         return f'{self.__class__.__name__}("{self.path}")'
 
+    @abstractmethod
     def __len__(self):
         return self.asset_count
+
+    @abstractmethod
+    def __getitem__(self, item):
+        pass
+
+    @abstractmethod
+    def __contains__(self, item):
+        try:
+            return self[item] is not None
+        except KeyError:
+            return False
