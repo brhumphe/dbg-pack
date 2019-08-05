@@ -27,6 +27,18 @@ class Pack2(AbstractPack):
 
     _namelist: List[str]
 
+    @property
+    def namelist(self) -> List[str]:
+        # if not self._namelist:
+        #     self._namelist = []
+        return self._namelist
+
+    @namelist.setter
+    def namelist(self, value: List[str]):
+        self._namelist = value
+        self.assets = {}
+        self._update_assets(self._namelist)
+
     def __init__(self, path: Path, namelist: List[str] = None):
         super().__init__(path)
         self._namelist = namelist
@@ -54,7 +66,7 @@ class Pack2(AbstractPack):
         self._update_assets(self._namelist)
 
     def _update_assets(self, namelist: List[str] = None):
-        name_dict = {}
+        name_dict: Dict[int, str] = {}
         used_hashes = []
 
         # Check for internal namelist

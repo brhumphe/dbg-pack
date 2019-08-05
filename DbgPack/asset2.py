@@ -30,7 +30,7 @@ class Asset2(AbstractAsset):
 
         with BinaryStructReader(self.path) as reader:
             reader.seek(self.offset)
-            if reader.peek(len(zip_magic)) != zip_magic:
+            if reader.peek(1)[:len(zip_magic)] != zip_magic:
                 return reader.read(self.size)
             else:
                 assert reader.read(len(zip_magic)) == zip_magic, 'invalid zip magic'
