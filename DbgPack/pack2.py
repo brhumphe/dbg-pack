@@ -27,14 +27,6 @@ class Pack2(AbstractPack):
 
     _namelist: List[str]
 
-    # _namelist: List[Union[bytes, str]] = field(default_factory=list, init=False, repr=False)
-
-    # @namelist.setter
-    # def namelist(self, value: List[Union[bytes, str]]):
-    #     self._namelist = value
-    #     self.assets = {}
-    #     self._update_asset_names(value)
-
     def __init__(self, path: Path, namelist: List[str] = None):
         super().__init__(path)
         self._namelist = namelist
