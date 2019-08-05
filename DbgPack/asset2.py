@@ -36,3 +36,6 @@ class Asset2(AbstractAsset):
                 assert reader.read(len(zip_magic)) == zip_magic, 'invalid zip magic'
                 unzip_size = reader.uint32BE()
                 return decompress(reader.read(self.size))
+
+    def __len__(self):
+        return super().__len__()
