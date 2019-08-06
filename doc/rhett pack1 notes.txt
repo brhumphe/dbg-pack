@@ -1,0 +1,28 @@
+.pack
+Big Endian
+
+
+[File Structure]
+Chunk Header
+Asset Header[..]
+0x00 fill to +0x2000
+File Data[..]
+<Repeat>
+
+
+(Assets_000.pack used for example.)
+
+[Chunk Header]
+Offset	|	Name		|	Type	|	Example		|	Description
+##########################################################################################
+~0x00	|Next Chunk		|uint32		|00 83 7E D1	|Offset of the next chunk in the pack.
+~0x04	|File Amount	|uint32		|00 00 00 75	|Amount of files in the chunk.
+
+[Asset Header]
+Offset	|	Name		|	Type	|	Example					|	Description
+##############################################################################################
+~0x08	|Name Length	|uint32		|00 00 00 1A				|Length of asset name.
+~0x0C	|Asset Name		|byte[..]	|AMB_HOSSIN_NIGHT_OS_16.fsb	|Name of asset file.
+~0x26	|Asset Offset	|uint32		|00 05 AA 3C				|Offset of asset data.
+~0x2A	|Data Length	|uint32		|00 00 57 80				|Length of asset data.
+~0x2E	|Checksum		|uint32		|31 4C 45 61				|CRC32 checksum of asset data.

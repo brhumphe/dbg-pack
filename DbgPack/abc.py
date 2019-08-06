@@ -25,7 +25,7 @@ class AbstractPack(ABC):
     path: Path
 
     asset_count: int
-    assets: Dict[str, AbstractAsset]  # Not sure if this will work correctly
+    assets: Dict[str, AbstractAsset]
 
     @abstractmethod
     def __init__(self, path: Path):
