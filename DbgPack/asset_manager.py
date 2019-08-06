@@ -1,5 +1,5 @@
-from dataclasses import dataclass, field
 from collections import ChainMap
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, ChainMap as ChainMapType
 
