@@ -1,47 +1,53 @@
+from pathlib import Path
 from typing import Dict
-from .abc import AbstractPack
 
-from DbgPack.asset import Asset
-from DbgPack.struct_reader import BinaryStructReader
+from .abc import AbstractPack
+from .asset1 import Asset1
+from .struct_reader import BinaryStructReader
 
 
 class Pack1(AbstractPack):
-    """
-    A .pack file archive for storing game assets
-    """
-    path: str
-    assets: Dict[str, Asset]
+    name: str
+    path: Path
 
-    def __init__(self, path: str):
+    asset_count: int
+    assets: Dict[str, Asset1]
+
+    def __init__(self, path: Path):
         super().__init__(path)
+
         self.assets = {}
-        self.path = path
-        with BinaryStructReader(path) as reader:
-            next_chunk_offset = -1
+        self.asset_count = 0
+        with BinaryStructReader(self.path) as reader:
+            next_chunk = -1
+            while next_chunk != 0:
+                next_chunk = reader.uint32BE()
+                asset_count = reader.uint32BE()
 
-            while next_chunk_offset != 0:
-                # Read a chunk
-                next_chunk_offset = reader.uint32BE()
-                file_count = reader.uint32BE()
-
-                # Read asset headers from chunk
-                for i in range(file_count):
-                    name = reader.string(reader.uint32BE())
-                    asset_type = name.split('.')[-1]
+                for i in range(asset_count):
+                    name_length = reader.uint32BE()
+                    name = reader.read(name_length).decode('utf-8')
                     offset = reader.uint32BE()
-                    length = reader.uint32BE()
+                    size = reader.uint32BE()
                     crc32 = reader.uint32BE()
 
-                    asset = Asset(name=name, offset=offset, length=length, crc32=crc32, path=self.path)
-                    self.assets.update({asset.name: asset})
+                    asset = Asset1(name=name, path=self.path, offset=offset, size=size, crc32=crc32)
+                    self.assets[asset.name] = asset
 
-                reader.seek(next_chunk_offset)
+                self.asset_count += asset_count
+                reader.seek(next_chunk)
 
     def __repr__(self):
-        return f"Pack1(\"{self.path}\")"
-
-    def __getitem__(self, item):
-        return self.assets[item]
+        return super().__repr__()
 
     def __len__(self):
-        return len(self.assets)
+        return super().__len__()
+
+    def __getitem__(self, item):
+        if isinstance(item, str):
+            return self.assets[item]
+        else:
+            raise KeyError
+
+    def __contains__(self, item):
+        super().__contains__(item)
