@@ -1,5 +1,6 @@
-from DbgPack import Pack2
 from pathlib import Path
+
+from DbgPack import Pack2
 
 partial_namelist = [b'AbilityClasses.txt', b'AbilityLines.txt', b'AbilityLineMembers.txt', b'AchievementCategories.txt',
                     b'ActorAnimTriggerDefinitions.xml', b'AnimationGroups.xml', b'AnimationTypes.xml',
@@ -25,7 +26,7 @@ def test_load_pack2():
     assert asset1.offset == 512
     # assert len(asset1) == 149
     assert asset1.crc32 == 1187660072
-    
+
     # TODO: Lookup via bytes should also work
     # asset1b = pack2v1[b'AbilityClasses.txt']
     # assert asset1b == asset1
@@ -35,7 +36,7 @@ def test_load_pack2():
 
     # TODO: Figure out what they changed the crc32 hashes to. They don't match the python crc32
     # assert asset1b.crc32 == 1187660072
-    
+
     pack2v2 = Pack2(Path('data_x64_0_without_namelist.pack2'))
     assert len(pack2v2.raw_assets) == 2485
     assert len(pack2v2) == 2485
@@ -51,7 +52,7 @@ def test_pack2_namelist():
     new_pack = Pack2(Path('data_x64_0_without_namelist.pack2'), namelist=partial_namelist)
     assert new_pack.namelist == partial_namelist
     # assert len(new_pack.assets) == len(partial_namelist)
-    
+
     # Assign a namelist after initialization
     new_pack.namelist = []
     assert new_pack.namelist == []
@@ -62,7 +63,7 @@ def test_pack2_namelist():
 
     # TODO: Handle passing names which are not in the namelist but ARE in the pack file.
     # materials_ps4 = new_pack[b'materials_ps4.xml']
-    
+
     # TODO: Handle passing names that are not contained in the pack
     new_pack.namelist = ['Invalid File Name']
     # assert len(new_pack.assets) == 0

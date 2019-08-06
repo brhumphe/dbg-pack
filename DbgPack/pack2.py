@@ -3,10 +3,9 @@ from pathlib import Path
 from typing import Dict, List
 
 from .abc import AbstractPack
-from .struct_reader import BinaryStructReader
 from .asset2 import Asset2
 from .hash import crc64
-
+from .struct_reader import BinaryStructReader
 
 _MAGIC: bytes = b'PAK\x01'
 _NAMELIST_HASH: int = crc64(b'{NAMELIST}')

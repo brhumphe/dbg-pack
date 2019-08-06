@@ -1,5 +1,6 @@
-from DbgPack import Pack1, AssetManager
 from pathlib import Path
+
+from DbgPack import Pack1, AssetManager
 
 
 def test_load_pack1():
@@ -14,7 +15,7 @@ def test_load_asset1():
     assert asset1.offset == 8192
     assert len(asset1) == 149
     assert asset1.crc32 == 1748740018
-    
+
     asset2 = pack['Contrails_Vortex_Purple.xml']
     assert asset2.offset == 770682
     assert len(asset2) == 2563
