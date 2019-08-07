@@ -108,6 +108,9 @@ class Pack2(AbstractPack):
     def __len__(self):
         return super().__len__()
 
+    def __iter__(self):
+        return super().__iter__()
+
     def __getitem__(self, item):
         if isinstance(item, str):
             try:
