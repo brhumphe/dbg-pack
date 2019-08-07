@@ -1,0 +1,35 @@
+<ActorRuntime>
+    <AnimationNetwork fileName="ThirdPersonUI.mrn" animSetName="Male" />
+    <AnimationEnumerations>
+        <AnimationEnumeration hash="1884873037" value="2" />
+    </AnimationEnumerations>
+    <AnimationValues />
+    <Base fileName="Armor_NC_Male_LightAssault_Look001_Lod0.dme" paletteName="Armor_NC_Male_LightAssault_Look001_Lod0.dma" updateRadius="1000.000000" waterDisplacementHeight="0.000000" objectTerrainDataId="0" />
+    <TextureAliases>
+        <Alias aliasName="default0" textureName="Armor_NC_Shared_All_DS.dds" modelType="0" materialIndex="0" semanticHash="1716414136" defaultTextureAlias="1" occlusionSlotBitmask="0" />
+        <Alias aliasName="default0" textureName="Shared_Characters_NC.dds" modelType="0" materialIndex="0" semanticHash="-125639093" defaultTextureAlias="1" occlusionSlotBitmask="0" />
+        <Alias aliasName="default0" textureName="Armor_NC_Shared_All_S.dds" modelType="0" materialIndex="0" semanticHash="67211600" defaultTextureAlias="1" occlusionSlotBitmask="0" />
+        <Alias aliasName="default0" textureName="Armor_NC_Shared_All_N.dds" modelType="0" materialIndex="0" semanticHash="789998085" defaultTextureAlias="1" occlusionSlotBitmask="0" />
+        <Alias aliasName="default0" textureName="Armor_NC_Shared_All_C.dds" modelType="0" materialIndex="0" semanticHash="-1295769314" defaultTextureAlias="1" occlusionSlotBitmask="0" />
+    </TextureAliases>
+    <TintAliases />
+    <TintInheritance Camo="0" Decal="0" EmpireTint="0" ExtraTint="0" ExportTints="0" />
+    <Lods>
+        <Lod distance="120" />
+    </Lods>
+    <CollisionType type="3099813281" />
+    <Usage actorUsage="0" borrowSkeleton="0" validatePcNpc="0" />
+    <HatHair type="Hair" coversFacialHair="0" />
+    <Shadows CheckShadowVisibility="0" />
+    <EquipType EquippedSlotName="Chest" />
+    <ChildAttachSlotsEx />
+    <OcclusionData SimpleVisibility="0" />
+    <MaterialType type="FLESH" />
+    <Invisible value="0" />
+    <DecalTintTranslations IsList="1">
+        <Entry Key="Default">
+            <EntryData LocationName="Default" Show="1" UV="2" xUvLocation="0.500000" yUvLocation="0.500000" rotation="0.000000" scaleXVal="1.666667" scaleYVal="2.000000" />
+        </Entry>
+    </DecalTintTranslations>
+    <TerrainObjectMetadata Lock="0" Designer_Object="0" Designer_Display="1" Indoor="0" Marker="0" Minimap="1" Terrain_Offset="0.000000" LOD_Bias="1.000000" />
+</ActorRuntime>

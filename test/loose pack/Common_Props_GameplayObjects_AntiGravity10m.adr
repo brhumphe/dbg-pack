@@ -1,0 +1,37 @@
+<ActorRuntime>
+    <AnimationNetwork fileName="" animSetName="" />
+    <AnimationEnumerations />
+    <AnimationValues />
+    <Base fileName="Common_Props_GameplayObjects_JumpPadType3_LOD0.dme" paletteName="Common_Props_GameplayObjects_AntiGravity10m_Lod0.dma" updateRadius="1500.000000" waterDisplacementHeight="0.000000" objectTerrainDataId="0" />
+    <TextureAliases>
+        <Alias aliasName="default0" textureName="Common_Props_JumpPads_S.dds" modelType="0" materialIndex="0" semanticHash="-773254801" defaultTextureAlias="1" occlusionSlotBitmask="0" />
+        <Alias aliasName="default0" textureName="grey.dds" modelType="0" materialIndex="0" semanticHash="1716414136" defaultTextureAlias="1" occlusionSlotBitmask="0" />
+        <Alias aliasName="default0" textureName="Common_Props_JumpPads_N.dds" modelType="0" materialIndex="0" semanticHash="678189709" defaultTextureAlias="1" occlusionSlotBitmask="0" />
+        <Alias aliasName="default0" textureName="Common_Props_JumpPads_C.dds" modelType="0" materialIndex="0" semanticHash="1735042216" defaultTextureAlias="1" occlusionSlotBitmask="0" />
+        <Alias aliasName="default0" textureName="Common_Props_JumpPads_S.dds" modelType="1" materialIndex="0" semanticHash="-773254801" defaultTextureAlias="1" occlusionSlotBitmask="0" />
+        <Alias aliasName="default0" textureName="grey.dds" modelType="1" materialIndex="0" semanticHash="1716414136" defaultTextureAlias="1" occlusionSlotBitmask="0" />
+        <Alias aliasName="default0" textureName="Common_Props_JumpPads_N.dds" modelType="1" materialIndex="0" semanticHash="678189709" defaultTextureAlias="1" occlusionSlotBitmask="0" />
+        <Alias aliasName="default0" textureName="Common_Props_JumpPads_C.dds" modelType="1" materialIndex="0" semanticHash="1735042216" defaultTextureAlias="1" occlusionSlotBitmask="0" />
+    </TextureAliases>
+    <TintAliases />
+    <Lods>
+        <Lod fileName="Common_Props_GameplayObjects_JumpPadType3_LOD0_LODAuto.dme" paletteName="Common_Props_GameplayObjects_AntiGravity10m_Lod1.dma" distance="156" />
+        <Lod distance="236" />
+        <Lod0a fileName="Common_Props_GameplayObjects_JumpPadType3_LOD0_LOD0Auto.dme" paletteName="Common_Props_GameplayObjects_AntiGravity10m_Lod0.dma" />
+    </Lods>
+    <EffectList>
+        <Effect toolName="FX" type="compositeEffect" name="PFX_AntiGravity_Lift_10m" id="2792" />
+    </EffectList>
+    <CollisionType type="4119585228" />
+    <CollisionData fileName="Common_Props_GameplayObjects_AntiGravity10m.cdt" />
+    <Usage actorUsage="0" borrowSkeleton="0" validatePcNpc="1" />
+    <HatHair type="Hair" coversFacialHair="0" />
+    <Shadows CheckShadowVisibility="0" />
+    <EquipType />
+    <ChildAttachSlotsEx />
+    <OcclusionData />
+    <MaterialType type="METAL" />
+    <Invisible value="0" />
+    <DecalTintTranslations />
+    <TerrainObjectMetadata Lock="0" Designer_Object="0" Designer_Display="1" Indoor="0" Marker="0" Minimap="1" Terrain_Offset="0.000000" LOD_Bias="1.000000" />
+</ActorRuntime>

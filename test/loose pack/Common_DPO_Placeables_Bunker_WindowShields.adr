@@ -1,0 +1,36 @@
+<ActorRuntime>
+    <AnimationNetwork fileName="" animSetName="" />
+    <AnimationEnumerations />
+    <AnimationValues />
+    <Base fileName="Common_DPO_Placeables_Bunker_WindowShields_LOD0.dme" paletteName="Common_DPO_Placeables_Bunker_WindowShields_Lod0.dma" updateRadius="150.000000" waterDisplacementHeight="0.000000" objectTerrainDataId="0" />
+    <TextureAliases>
+        <Alias aliasName="TR" textureName="Common_Props_IFFDoor_weavepattern.dds" modelType="0" materialIndex="0" semanticHash="966252751" defaultTextureAlias="1" occlusionSlotBitmask="0" />
+        <Alias aliasName="VS" textureName="Common_Props_IFFDoor_hexpattern.dds" modelType="0" materialIndex="0" semanticHash="966252751" defaultTextureAlias="0" occlusionSlotBitmask="0" />
+        <Alias aliasName="NC" textureName="Common_Props_IFFDoor_diamondpattern.dds" modelType="0" materialIndex="0" semanticHash="966252751" defaultTextureAlias="0" occlusionSlotBitmask="0" />
+        <Alias aliasName="TR" textureName="Common_Props_IFFDoor_weavepattern.dds" modelType="1" materialIndex="0" semanticHash="966252751" defaultTextureAlias="1" occlusionSlotBitmask="0" />
+        <Alias aliasName="VS" textureName="Common_Props_IFFDoor_hexpattern.dds" modelType="1" materialIndex="0" semanticHash="966252751" defaultTextureAlias="0" occlusionSlotBitmask="0" />
+        <Alias aliasName="NC" textureName="Common_Props_IFFDoor_diamondpattern.dds" modelType="1" materialIndex="0" semanticHash="966252751" defaultTextureAlias="0" occlusionSlotBitmask="0" />
+    </TextureAliases>
+    <TintAliases>
+        <Alias aliasName="VS" red="0.000000" green="1.000000" blue="0.901961" modelType="0" materialIndex="0" semanticHash="-1823134255" defaultTintAlias="0" />
+        <Alias aliasName="NC" red="0.996078" green="0.847059" blue="0.003922" modelType="0" materialIndex="0" semanticHash="-1823134255" defaultTintAlias="0" />
+        <Alias aliasName="TR" red="1.000000" green="0.000000" blue="0.000000" modelType="0" materialIndex="0" semanticHash="-1823134255" defaultTintAlias="1" />
+    </TintAliases>
+    <TintInheritance Camo="0" Decal="0" EmpireTint="0" ExtraTint="0" ExportTints="0" />
+    <Lods>
+        <Lod fileName="Common_DPO_Placeables_Bunker_WindowShields_LOD0_LODAuto.dme" paletteName="Common_DPO_Placeables_Bunker_WindowShields_Lod1.dma" distance="90" />
+        <Lod distance="840" />
+    </Lods>
+    <CollisionType type="3378251441" />
+    <CollisionData fileName="Common_DPO_Placeables_Bunker_WindowShields.cdt" />
+    <Usage actorUsage="0" borrowSkeleton="0" validatePcNpc="0" />
+    <HatHair type="Hair" coversFacialHair="0" />
+    <Shadows CheckShadowVisibility="0" />
+    <EquipType />
+    <ChildAttachSlotsEx />
+    <OcclusionData SimpleVisibility="0" />
+    <MaterialType type="DEFAULT" />
+    <Invisible value="0" />
+    <DecalTintTranslations IsList="1" />
+    <TerrainObjectMetadata Lock="0" Designer_Object="0" Designer_Display="1" Indoor="0" Marker="0" Minimap="1" Terrain_Offset="0.000000" LOD_Bias="1.000000" />
+</ActorRuntime>
