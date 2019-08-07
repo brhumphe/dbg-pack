@@ -41,6 +41,10 @@ class AbstractPack(ABC):
         return self.asset_count
 
     @abstractmethod
+    def __iter__(self):
+        return iter(self.assets.values())
+
+    @abstractmethod
     def __getitem__(self, item):
         pass
 

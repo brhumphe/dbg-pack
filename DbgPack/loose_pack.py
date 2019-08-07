@@ -36,5 +36,8 @@ class LoosePack(AbstractPack):
         else:
             raise KeyError
 
+    def __iter__(self):
+        return iter(self.assets.values())
+
     def __contains__(self, item):
         super().__contains__(item)
