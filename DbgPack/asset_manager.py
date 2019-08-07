@@ -6,6 +6,7 @@ from typing import List, ChainMap as ChainMapType
 from .abc import AbstractPack, AbstractAsset
 from .pack1 import Pack1
 from .pack2 import Pack2
+from .loose_pack import LoosePack
 
 
 @dataclass
@@ -20,10 +21,8 @@ class AssetManager:
                 return Pack1(path)
             elif path.suffix == '.pack2':
                 return Pack2(path, namelist=namelist)
-
         else:
-            # TODO: Load directories as packs
-            pass
+            return LoosePack(path)
 
     def __init__(self, paths: List[Path], namelist: List[str] = None):
         self.packs = [AssetManager.load_pack(path, namelist=namelist) for path in paths]
