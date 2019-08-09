@@ -49,7 +49,6 @@ class Pack2(AbstractPack):
         :param outdir: path to save file
         """
 
-        print(f'Exporting to {name}...')
         makedirs(outdir, exist_ok=True)
 
         with BinaryStructWriter(outdir / name) as writer:

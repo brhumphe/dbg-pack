@@ -24,8 +24,7 @@ class AssetManager:
         else:
             return LoosePack(path)
 
-    def export_pack2(self, name: str, outdir: str = 'Exported'):
-        print('Exporting to .pack2...')
+    def export_pack2(self, name: str, outdir: str):
         Pack2.export(list(self.assets.values()), name, Path(outdir))
 
     def __init__(self, paths: List[Path], namelist: List[str] = None):
