@@ -4,9 +4,9 @@ from pathlib import Path
 from typing import List, ChainMap as ChainMapType
 
 from .abc import AbstractPack, AbstractAsset
+from .loose_pack import LoosePack
 from .pack1 import Pack1
 from .pack2 import Pack2
-from .loose_pack import LoosePack
 
 
 @dataclass
@@ -23,6 +23,10 @@ class AssetManager:
                 return Pack2(path, namelist=namelist)
         else:
             return LoosePack(path)
+
+    def export_pack2(self, name: str, outdir: str = 'Exported'):
+        print('Exporting to .pack2...')
+        Pack2.export(list(self.assets.values()), name, Path(outdir))
 
     def __init__(self, paths: List[Path], namelist: List[str] = None):
         self.packs = [AssetManager.load_pack(path, namelist=namelist) for path in paths]

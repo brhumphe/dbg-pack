@@ -1,6 +1,6 @@
+import struct
 from io import BufferedWriter
 from pathlib import Path
-import struct
 
 
 class BinaryStructWriter(BufferedWriter):
@@ -31,6 +31,12 @@ class BinaryStructWriter(BufferedWriter):
 
     def string(self, value: str, encoding='utf-8'):
         self.write(value.encode(encoding))
+
+    def write_to(self, data: bytes, offset: int):
+        pos = self.tell()
+        self.seek(offset, 0)
+        self.write(data)
+        self.seek(pos, 0)
 
     def __init__(self, path: Path):
         file_io = path.open('wb')
