@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List
+from os import makedirs
 
-from .abc import AbstractPack
+from .abc import AbstractPack, AbstractAsset
 from .asset2 import Asset2
 from .hash import crc64
 from .struct_reader import BinaryStructReader
@@ -37,6 +38,19 @@ class Pack2(AbstractPack):
         self._namelist = value
         self.assets = {}
         self._update_assets(self._namelist)
+
+    @staticmethod
+    def export(assets: List[AbstractAsset], name: str, outdir: Path):
+        """
+
+        :param assets: List of assets to export
+        :param name: name of file to export to
+        :param outdir: path to save file
+        """
+
+        print(f'Exporting to {name}...')
+        makedirs(outdir, exist_ok=True)
+        # TODO: Write struct writer
 
     def __init__(self, path: Path, namelist: List[str] = None):
         super().__init__(path)
