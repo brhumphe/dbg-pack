@@ -40,7 +40,7 @@ class BinaryStructReader(BufferedReader):
     def uint64BE(self):
         return self._read_struct(self._uint64BE)
 
-    def string(self, length, encoding="utf-8"):
+    def string(self, length, encoding='utf-8'):
         return self.unpack_struct(str(length) + 's')[0].decode(encoding)
 
     def __init__(self, path: Path):
