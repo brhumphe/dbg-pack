@@ -1,11 +1,13 @@
 from dataclasses import dataclass
+from os import makedirs
 from pathlib import Path
 from typing import Dict, List
 
-from .abc import AbstractPack
+from .abc import AbstractPack, AbstractAsset
 from .asset2 import Asset2
 from .hash import crc64
 from .struct_reader import BinaryStructReader
+from .struct_writer import BinaryStructWriter
 
 _MAGIC: bytes = b'PAK\x01'
 _NAMELIST_HASH: int = crc64(b'{NAMELIST}')
@@ -37,6 +39,50 @@ class Pack2(AbstractPack):
         self._namelist = value
         self.assets = {}
         self._update_assets(self._namelist)
+
+    @staticmethod
+    def export(assets: List[AbstractAsset], name: str, outdir: Path):
+        """
+
+        :param assets: List of assets to export
+        :param name: name of file to export to
+        :param outdir: path to save file
+        """
+
+        makedirs(outdir, exist_ok=True)
+
+        with BinaryStructWriter(outdir / name) as writer:
+            data_size = sum([x.size for x in assets])
+
+            writer.write(_MAGIC)
+            writer.uint32LE(len(assets))
+            writer.uint64LE(0)  # Overwrite this later
+            writer.uint64LE(data_size + 0x200)
+            writer.uint64LE(256)
+
+            # Padding
+            while writer.tell() < data_size + 0x200:
+                writer.write(b'\x00')
+
+            data_offset = 0x200
+            for a in sorted(assets, key=lambda x: x.name_hash if isinstance(x, Asset2) else crc64(x.name)):
+                if isinstance(a, Asset2):
+                    writer.uint64LE(a.name_hash)
+                else:
+                    writer.uint64LE(crc64(a.name))
+
+                writer.uint64LE(data_offset)
+                writer.uint64LE(a.size)
+                writer.uint32LE(0x10)  # Compression flag
+                writer.uint32LE(0)  # PTS doesn't care if the checksums don't match
+
+                # Write data
+                writer.write_to(a.data, data_offset)
+                data_offset += a.size
+
+            pack_size = writer.tell()
+            writer.seek(0x8, 0)
+            writer.uint64LE(pack_size)
 
     def __init__(self, path: Path, namelist: List[str] = None):
         super().__init__(path)
@@ -107,6 +153,9 @@ class Pack2(AbstractPack):
 
     def __len__(self):
         return super().__len__()
+
+    def __iter__(self):
+        return super().__iter__()
 
     def __getitem__(self, item):
         if isinstance(item, str):

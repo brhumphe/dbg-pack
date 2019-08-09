@@ -1,0 +1,33 @@
+<ActorRuntime>
+    <AnimationNetwork fileName="" animSetName="" />
+    <AnimationEnumerations />
+    <AnimationValues />
+    <Base fileName="Armor_NC_Male_Max_Look001Upgrade01_Lod0.dme" paletteName="Armor_NC_Male_Max_Look001Upgrade01_Lod0.dma" updateRadius="150.000000" waterDisplacementHeight="0.000000" objectTerrainDataId="0" />
+    <TextureAliases>
+        <Alias aliasName="default0" textureName="Armor_NC_Max_DS.dds" modelType="0" materialIndex="0" semanticHash="1716414136" defaultTextureAlias="1" occlusionSlotBitmask="0" />
+        <Alias aliasName="default0" textureName="Shared_Characters_NC.dds" modelType="0" materialIndex="0" semanticHash="-125639093" defaultTextureAlias="1" occlusionSlotBitmask="0" />
+        <Alias aliasName="default0" textureName="Armor_NC_Max_S.dds" modelType="0" materialIndex="0" semanticHash="67211600" defaultTextureAlias="1" occlusionSlotBitmask="0" />
+        <Alias aliasName="default0" textureName="Armor_NC_Max_N.dds" modelType="0" materialIndex="0" semanticHash="789998085" defaultTextureAlias="1" occlusionSlotBitmask="0" />
+        <Alias aliasName="default0" textureName="Armor_NC_Max_C.dds" modelType="0" materialIndex="0" semanticHash="-1295769314" defaultTextureAlias="1" occlusionSlotBitmask="0" />
+    </TextureAliases>
+    <TintAliases />
+    <TintInheritance Camo="1" Decal="1" EmpireTint="0" ExtraTint="0" ExportTints="0" />
+    <Lods>
+        <Lod distance="120" />
+    </Lods>
+    <CollisionType type="3099813281" />
+    <Usage actorUsage="2" borrowSkeleton="1" validatePcNpc="0" />
+    <HatHair type="Hair" coversFacialHair="0" />
+    <Shadows CheckShadowVisibility="0" />
+    <EquipType EquippedSlotName="Chest" />
+    <ChildAttachSlotsEx />
+    <OcclusionData SimpleVisibility="0" />
+    <MaterialType type="" />
+    <Invisible value="0" />
+    <DecalTintTranslations IsList="1">
+        <Entry Key="Default">
+            <EntryData LocationName="Default" Show="1" UV="2" xUvLocation="0.500000" yUvLocation="0.500000" rotation="0.000000" scaleXVal="2.857143" scaleYVal="1.000000" />
+        </Entry>
+    </DecalTintTranslations>
+    <TerrainObjectMetadata Lock="0" Designer_Object="0" Designer_Display="1" Indoor="0" Marker="0" Minimap="1" Terrain_Offset="0.000000" LOD_Bias="1.000000" />
+</ActorRuntime>
