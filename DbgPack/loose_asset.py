@@ -22,14 +22,11 @@ class LooseAsset(AbstractAsset):
     def __init__(self, name: str, path: Path):
         mo = fullmatch(r'(0x[a-fA-F0-9]{16}).bin', name)
         if mo:
-            print(mo)
-            self.name = ''
-            self.name_hash = int(mo[0], 0)
+            self.name_hash = int(mo.group(1), 0)
 
         else:
-            self.name = name
             self.name_hash = crc64(name)
-
+        self.name = name
         self.path = path
 
         self.size = (self.path / self.name).stat().st_size
