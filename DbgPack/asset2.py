@@ -14,8 +14,11 @@ class Asset2(AbstractAsset):
     name_hash: int = field(default=None)
     offset: int = field(default=0)
     size: int = field(default=0)
+    zipped_size: int = field(default=0)
     # zipped: bool
     crc32: int = field(default=0)
+
+    ZIP_MAGIC = b'\xa1\xb2\xc3\xd4'
 
     def __post_init__(self):
         assert self.name_hash, 'name_hash is required'
@@ -23,19 +26,17 @@ class Asset2(AbstractAsset):
 
     @property
     def data(self) -> bytes:
-        zip_magic = b'\xa1\xb2\xc3\xd4'
-
         if self.size == 0:
             return bytes()
 
         with BinaryStructReader(self.path) as reader:
             reader.seek(self.offset)
-            if reader.peek(1)[:len(zip_magic)] != zip_magic:
+            if reader.peek(1)[:len(self.ZIP_MAGIC)] != self.ZIP_MAGIC:
                 return reader.read(self.size)
             else:
-                assert reader.read(len(zip_magic)) == zip_magic, 'invalid zip magic'
-                unzip_size = reader.uint32BE()
-                return decompress(reader.read(self.size))
+                assert reader.read(len(self.ZIP_MAGIC)) == self.ZIP_MAGIC, 'invalid zip magic'
+                _ = reader.uint32BE()  # Actual size is already read and stored
+                return decompress(reader.read(self.zipped_size))
 
     def __len__(self):
         return super().__len__()

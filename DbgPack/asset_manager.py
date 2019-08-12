@@ -22,7 +22,7 @@ class AssetManager:
             elif path.suffix == '.pack2':
                 return Pack2(path, namelist=namelist)
         else:
-            return LoosePack(path)
+            return LoosePack(path)  # TODO: Load .bin files correctly
 
     def export_pack2(self, name: str, outdir: Path):
         Pack2.export(list(self.assets.values()), name, outdir)

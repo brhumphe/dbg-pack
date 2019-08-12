@@ -13,6 +13,9 @@ _MAGIC: bytes = b'PAK\x01'
 _NAMELIST_HASH: int = crc64(b'{NAMELIST}')
 assert _NAMELIST_HASH == 0x4137cc65bd97fd30, 'crc64 is not generated correctly'
 
+_ZIPPED_FLAGS = (0x01, 0x11)
+_UNZIPPED_FLAGS = (0x10, 0x00)
+
 
 @dataclass
 class Pack2(AbstractPack):
@@ -30,8 +33,6 @@ class Pack2(AbstractPack):
 
     @property
     def namelist(self) -> List[str]:
-        # if not self._namelist:
-        #     self._namelist = []
         return self._namelist
 
     @namelist.setter
@@ -74,7 +75,7 @@ class Pack2(AbstractPack):
                 writer.uint64LE(data_offset)
                 writer.uint64LE(a.size)
                 writer.uint32LE(0x10)  # Compression flag
-                writer.uint32LE(0)  # PTS doesn't care if the checksums don't match
+                writer.uint32LE(a.crc32)  # PTS doesn't care if the checksums don't match
 
                 # Write data
                 writer.write_to(a.data, data_offset)
@@ -98,13 +99,25 @@ class Pack2(AbstractPack):
             self.raw_assets = {}
             for i in range(self.asset_count):
                 name_hash = reader.uint64LE()
+
                 offset = reader.uint64LE()
-                size = reader.uint64LE()
+                zipped_size = reader.uint64LE()
                 zip_flag = reader.uint32LE()
                 crc32 = reader.uint32LE()
 
+                # HACK: This could probably be contained in a function for use in Asset2.data()
+                size = 0
+                if zip_flag in _ZIPPED_FLAGS and zipped_size > 0:
+                    pos = reader.tell()
+                    reader.seek(offset)
+                    assert reader.read(len(Asset2.ZIP_MAGIC)) == Asset2.ZIP_MAGIC, 'invalid zip magic'
+                    size = reader.uint32BE()
+                    reader.seek(pos)
+                else:
+                    size = zipped_size
+
                 asset = Asset2(name_hash=name_hash, crc32=crc32, offset=offset,
-                               size=size, path=self.path)
+                               size=size, zipped_size=zipped_size, path=self.path)
                 self.raw_assets[asset.name_hash] = asset
 
         self.assets = {}
