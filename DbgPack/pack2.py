@@ -5,6 +5,7 @@ from typing import Dict, List
 
 from .abc import AbstractPack, AbstractAsset
 from .asset2 import Asset2
+from .loose_asset import LooseAsset
 from .hash import crc64
 from .struct_reader import BinaryStructReader
 from .struct_writer import BinaryStructWriter
@@ -67,7 +68,7 @@ class Pack2(AbstractPack):
 
             data_offset = 0x200
             for a in sorted(assets, key=lambda x: x.name_hash if isinstance(x, Asset2) else crc64(x.name)):
-                if isinstance(a, Asset2):
+                if isinstance(a, (Asset2, LooseAsset)):
                     writer.uint64LE(a.name_hash)
                 else:
                     writer.uint64LE(crc64(a.name))
