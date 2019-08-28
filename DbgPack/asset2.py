@@ -24,14 +24,14 @@ class Asset2(AbstractAsset):
         assert self.name_hash, 'name_hash is required'
         assert self.path, 'path is required'
 
-    def get_data(self, raw=False) -> bytes:
+    @property
+    def data(self) -> bytes:
         if self.size == 0:
             return bytes()
 
         with BinaryStructReader(self.path) as reader:
             reader.seek(self.offset)
-            # if not zipped
-            if reader.peek(1)[:len(self.ZIP_MAGIC)] != self.ZIP_MAGIC or raw is True:
+            if reader.peek(1)[:len(self.ZIP_MAGIC)] != self.ZIP_MAGIC:
                 return reader.read(self.size)
             else:
                 assert reader.read(len(self.ZIP_MAGIC)) == self.ZIP_MAGIC, 'invalid zip magic'

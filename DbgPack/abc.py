@@ -10,9 +10,9 @@ class AbstractAsset(ABC):
     size: int
     crc32: int
 
-    # Using a method instead of property to give the option of returning the raw data
+    @property
     @abstractmethod
-    def get_data(self, raw: bool) -> bytes:
+    def data(self) -> bytes:
         pass
 
     @abstractmethod

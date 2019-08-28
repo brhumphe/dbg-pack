@@ -1,7 +1,8 @@
 from dataclasses import dataclass
-from os import walk
-from pathlib import Path
 from typing import Dict
+from pathlib import Path
+from os import walk
+from re import fullmatch
 
 from .abc import AbstractPack
 from .loose_asset import LooseAsset

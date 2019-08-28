@@ -1,6 +1,6 @@
-from binascii import crc32
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
+from binascii import crc32
 from re import fullmatch
 
 from .abc import AbstractAsset
@@ -32,8 +32,8 @@ class LooseAsset(AbstractAsset):
         self.size = (self.path / self.name).stat().st_size
         self.crc32 = crc32((self.path / self.name).read_bytes())
 
-    def get_data(self, raw=False) -> bytes:
-        # Ignore raw for now. Maybe we can keep these in zipped files
+    @property
+    def data(self) -> bytes:
         return (self.path / self.name).read_bytes() if self.size > 0 else bytes()
 
     def __len__(self):
