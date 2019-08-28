@@ -18,8 +18,8 @@ class Asset1(AbstractAsset):
         assert self.name, 'name is required'
         assert self.path, 'path is required'
 
-    @property
-    def data(self) -> bytes:
+    def get_data(self, raw=False) -> bytes:
+        # No raw data, so just ignore it
         if self.size == 0:
             return bytes()
 

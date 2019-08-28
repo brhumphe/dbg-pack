@@ -5,8 +5,8 @@ from typing import Dict, List
 
 from .abc import AbstractPack, AbstractAsset
 from .asset2 import Asset2
-from .loose_asset import LooseAsset
 from .hash import crc64
+from .loose_asset import LooseAsset
 from .struct_reader import BinaryStructReader
 from .struct_writer import BinaryStructWriter
 
@@ -79,7 +79,7 @@ class Pack2(AbstractPack):
                 writer.uint32LE(a.crc32)  # PTS doesn't care if the checksums don't match
 
                 # Write data
-                writer.write_to(a.data, data_offset)
+                writer.write_to(a.get_data(), data_offset)
                 data_offset += a.size
 
             pack_size = writer.tell()
@@ -130,7 +130,7 @@ class Pack2(AbstractPack):
 
         # Check for internal namelist
         if _NAMELIST_HASH in self:
-            names = self.raw_assets[_NAMELIST_HASH].data.strip().split(b'\n')
+            names = self.raw_assets[_NAMELIST_HASH].get_data().strip().split(b'\n')
             for n in names:
                 hash_ = crc64(n)
                 name_dict[hash_] = n.decode('utf-8')
