@@ -16,7 +16,7 @@ class LooseAsset(AbstractAsset):
     name_hash: int
     path: Path
 
-    size: int
+    data_length: int
     crc32: int
 
     def __init__(self, name: str, path: Path):
@@ -29,12 +29,12 @@ class LooseAsset(AbstractAsset):
         self.name = name
         self.path = path
 
-        self.size = (self.path / self.name).stat().st_size
+        self.data_length = (self.path / self.name).stat().st_size
         self.crc32 = crc32((self.path / self.name).read_bytes())
 
     def get_data(self, raw=False) -> bytes:
         # Ignore raw for now. Maybe we can keep these in zipped files
-        return (self.path / self.name).read_bytes() if self.size > 0 else bytes()
+        return (self.path / self.name).read_bytes() if self.data_length > 0 else bytes()
 
     def __len__(self):
         return super().__len__()
