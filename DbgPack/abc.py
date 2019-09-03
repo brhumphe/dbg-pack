@@ -18,7 +18,7 @@ class AbstractAsset(ABC):
     # This should return the stored size of the asset
     @abstractmethod
     def __len__(self):
-        pass
+        return self.data_length
 
 
 class AbstractPack(ABC):

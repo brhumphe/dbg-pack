@@ -28,10 +28,10 @@ class Pack1(AbstractPack):
                     name_length = reader.uint32BE()
                     name = reader.read(name_length).decode('utf-8')
                     offset = reader.uint32BE()
-                    size = reader.uint32BE()
+                    data_length = reader.uint32BE()
                     crc32 = reader.uint32BE()
 
-                    asset = Asset1(name=name, path=self.path, offset=offset, size=size, crc32=crc32)
+                    asset = Asset1(name=name, path=self.path, offset=offset, data_length=data_length, crc32=crc32)
                     self.assets[asset.name] = asset
 
                 self.asset_count += asset_count

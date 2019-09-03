@@ -44,6 +44,5 @@ class Asset2(AbstractAsset):
                 # return raw data
                 return reader.read(self.data_length)
 
-    # This will return the length of the stored data, not the unpacked length
     def __len__(self):
-        return self.data_length
+        return super().__len__()
