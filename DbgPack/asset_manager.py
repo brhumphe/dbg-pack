@@ -24,8 +24,8 @@ class AssetManager:
         else:
             return LoosePack(path)
 
-    def export_pack2(self, name: str, outdir: Path):
-        Pack2.export(list(self.assets.values()), name, outdir)
+    def export_pack2(self, name: str, outdir: Path, raw=False):
+        Pack2.export(list(self.assets.values()), name, outdir, raw)
 
     def __init__(self, paths: List[Path], namelist: List[str] = None):
         self.packs = [AssetManager.load_pack(path, namelist=namelist) for path in paths]
