@@ -7,5 +7,4 @@ from .pack2 import Pack2
 from .loose_pack import LoosePack
 from .struct_reader import BinaryStructReader
 
-__all__ = ['Asset1', 'Asset2', 'LooseAsset', 'Pack1', 'Pack2', 'LoosePack',
-           'AssetManager', 'BinaryStructReader']
+__all__ = ['Asset1', 'Asset2', 'LooseAsset', 'Pack1', 'Pack2', 'LoosePack', 'AssetManager']
