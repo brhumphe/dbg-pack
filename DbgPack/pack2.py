@@ -5,8 +5,8 @@ from typing import Dict, List
 
 from .abc import AbstractPack, AbstractAsset
 from .asset2 import Asset2
-from .loose_asset import LooseAsset
 from .hash import crc64
+from .loose_asset import LooseAsset
 from .struct_reader import BinaryStructReader
 from .struct_writer import BinaryStructWriter
 
@@ -24,7 +24,7 @@ class Pack2(AbstractPack):
     path: Path
 
     asset_count: int
-    size: int
+    length: int
     map_offset: int
 
     assets: Dict[str, Asset2]
@@ -43,27 +43,43 @@ class Pack2(AbstractPack):
         self._update_assets(self._namelist)
 
     @staticmethod
-    def export(assets: List[AbstractAsset], name: str, outdir: Path):
+    def export(assets: List[AbstractAsset], name: str, outdir: Path, raw: bool):
         """
 
         :param assets: List of assets to export
         :param name: name of file to export to
         :param outdir: path to save file
+        :param raw: should we use raw zipped data
         """
 
         makedirs(outdir, exist_ok=True)
 
         with BinaryStructWriter(outdir / name) as writer:
-            data_size = sum([x.size for x in assets])
+            sizes = []
+            for a in assets:
+                if isinstance(a, Asset2):
+                    if a.is_zipped:
+                        if raw:
+                            sizes.append(a.data_length)
+                        else:
+                            sizes.append(a.unzipped_length)
+
+                    else:  # not zipped
+                        sizes.append(a.data_length)
+
+                else:  # not Asset2
+                    sizes.append(a.data_length)
+
+            total_data_length = sum(sizes)
 
             writer.write(_MAGIC)
             writer.uint32LE(len(assets))
             writer.uint64LE(0)  # Overwrite this later
-            writer.uint64LE(data_size + 0x200)
+            writer.uint64LE(total_data_length + 0x200)
             writer.uint64LE(256)
 
             # Padding
-            while writer.tell() < data_size + 0x200:
+            while writer.tell() < total_data_length + 0x200:
                 writer.write(b'\x00')
 
             data_offset = 0x200
@@ -74,17 +90,37 @@ class Pack2(AbstractPack):
                     writer.uint64LE(crc64(a.name))
 
                 writer.uint64LE(data_offset)
-                writer.uint64LE(a.size)
-                writer.uint32LE(0x10)  # Compression flag
+                length = 0
+                flag = 0
+                if isinstance(a, Asset2):
+                    if a.is_zipped:
+                        if raw:
+                            length = a.data_length
+                            flag = _ZIPPED_FLAGS[0]
+                        else:
+                            length = a.unzipped_length
+                            flag = _UNZIPPED_FLAGS[0]
+
+                    else:  # not zipped
+                        length = a.data_length
+                        flag = _UNZIPPED_FLAGS[0]
+
+                else:  # not Asset2
+                    length = a.data_length
+                    flag = _UNZIPPED_FLAGS[0]
+
+                writer.uint64LE(length)
+                writer.uint32LE(flag)
+
                 writer.uint32LE(a.crc32)  # PTS doesn't care if the checksums don't match
 
                 # Write data
-                writer.write_to(a.data, data_offset)
-                data_offset += a.size
+                writer.write_to(a.get_data(raw), data_offset)
+                data_offset += length
 
-            pack_size = writer.tell()
+            pack_length = writer.tell()
             writer.seek(0x8, 0)
-            writer.uint64LE(pack_size)
+            writer.uint64LE(pack_length)
 
     def __init__(self, path: Path, namelist: List[str] = None):
         super().__init__(path)
@@ -93,7 +129,7 @@ class Pack2(AbstractPack):
         with BinaryStructReader(self.path) as reader:
             assert reader.read(len(_MAGIC)) == _MAGIC, 'invalid pack2 magic'
             self.asset_count = reader.uint32LE()
-            self.size = reader.uint64LE()
+            self.length = reader.uint64LE()
             self.map_offset = reader.uint64LE()
 
             reader.seek(self.map_offset)
@@ -102,23 +138,23 @@ class Pack2(AbstractPack):
                 name_hash = reader.uint64LE()
 
                 offset = reader.uint64LE()
-                zipped_size = reader.uint64LE()
-                zip_flag = reader.uint32LE()
+                data_length = reader.uint64LE()  # length of stored data
+                zipped_flag = reader.uint32LE()
                 crc32 = reader.uint32LE()
 
-                # HACK: This could probably be contained in a function for use in Asset2.data()
-                size = 0
-                if zip_flag in _ZIPPED_FLAGS and zipped_size > 0:
+                if zipped_flag in _ZIPPED_FLAGS and data_length > 0:
                     pos = reader.tell()
                     reader.seek(offset)
-                    assert reader.read(len(Asset2.ZIP_MAGIC)) == Asset2.ZIP_MAGIC, 'invalid zip magic'
-                    size = reader.uint32BE()
+                    assert reader.read(len(Asset2.ZIP_MAGIC)) == Asset2.ZIP_MAGIC, 'zip flag mismatch with data header'
+                    is_zipped = True
+                    unzipped_length = reader.uint32BE()
                     reader.seek(pos)
                 else:
-                    size = zipped_size
+                    unzipped_length = 0  # This is only used if the asset is zipped
+                    is_zipped = False
 
-                asset = Asset2(name_hash=name_hash, crc32=crc32, offset=offset,
-                               size=size, zipped_size=zipped_size, path=self.path)
+                asset = Asset2(name_hash=name_hash, crc32=crc32, offset=offset, is_zipped=is_zipped,
+                               data_length=data_length, unzipped_length=unzipped_length, path=self.path)
                 self.raw_assets[asset.name_hash] = asset
 
         self.assets = {}
@@ -130,7 +166,7 @@ class Pack2(AbstractPack):
 
         # Check for internal namelist
         if _NAMELIST_HASH in self:
-            names = self.raw_assets[_NAMELIST_HASH].data.strip().split(b'\n')
+            names = self.raw_assets[_NAMELIST_HASH].get_data().strip().split(b'\n')
             for n in names:
                 hash_ = crc64(n)
                 name_dict[hash_] = n.decode('utf-8')

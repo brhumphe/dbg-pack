@@ -7,7 +7,7 @@ class AbstractAsset(ABC):
     name: str
     path: Path
 
-    size: int
+    data_length: int
     crc32: int
 
     @property
@@ -15,9 +15,10 @@ class AbstractAsset(ABC):
     def data(self) -> bytes:
         pass
 
+    # This should return the stored size of the asset
     @abstractmethod
     def __len__(self):
-        return self.size
+        return self.data_length
 
 
 class AbstractPack(ABC):

@@ -13,9 +13,9 @@ class Asset2(AbstractAsset):
 
     name_hash: int = field(default=None)
     offset: int = field(default=0)
-    size: int = field(default=0)
-    zipped_size: int = field(default=0)
-    # zipped: bool
+    data_length: int = field(default=0)  # data_length should refer to stored data size
+    unzipped_length: int = field(default=0)  # unzipped_length should refer to the real size
+    is_zipped: bool = field(default=False)
     crc32: int = field(default=0)
 
     ZIP_MAGIC = b'\xa1\xb2\xc3\xd4'
@@ -24,19 +24,25 @@ class Asset2(AbstractAsset):
         assert self.name_hash, 'name_hash is required'
         assert self.path, 'path is required'
 
-    @property
-    def data(self) -> bytes:
-        if self.size == 0:
+    def get_data(self, raw=False) -> bytes:
+        if self.data_length == 0:
             return bytes()
 
         with BinaryStructReader(self.path) as reader:
             reader.seek(self.offset)
-            if reader.peek(1)[:len(self.ZIP_MAGIC)] != self.ZIP_MAGIC:
-                return reader.read(self.size)
-            else:
+            if self.is_zipped:
+                if raw:
+                    # Return raw data
+                    return reader.read(self.data_length)
+
+                # return unzipped data
                 assert reader.read(len(self.ZIP_MAGIC)) == self.ZIP_MAGIC, 'invalid zip magic'
-                _ = reader.uint32BE()  # Actual size is already read and stored
-                return decompress(reader.read(self.zipped_size))
+                assert self.unzipped_length == reader.uint32BE(), 'unzipped length mismatch'
+                return decompress(reader.read(self.data_length))
+
+            else:  # Not zipped
+                # return raw data
+                return reader.read(self.data_length)
 
     def __len__(self):
         return super().__len__()
