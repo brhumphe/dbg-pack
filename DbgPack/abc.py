@@ -10,9 +10,8 @@ class AbstractAsset(ABC):
     data_length: int
     crc32: int
 
-    @property
     @abstractmethod
-    def data(self) -> bytes:
+    def get_data(self, raw) -> bytes:
         pass
 
     # This should return the stored size of the asset
