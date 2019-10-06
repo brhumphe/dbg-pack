@@ -2,12 +2,12 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from zlib import decompress
 
-from .abc import AbstractAsset
+from .abc import Asset
 from .struct_reader import BinaryStructReader
 
 
 @dataclass
-class Asset2(AbstractAsset):
+class Asset2(Asset):
     name: str = field(default='')
     path: Path = field(default=None)
 
@@ -43,6 +43,3 @@ class Asset2(AbstractAsset):
             else:  # Not zipped
                 # return raw data
                 return reader.read(self.data_length)
-
-    def __len__(self):
-        return super().__len__()

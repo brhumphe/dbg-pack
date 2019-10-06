@@ -4,12 +4,13 @@ from pathlib import Path
 from os import walk
 from re import fullmatch
 
-from .abc import AbstractPack
+from .abc import Pack
 from .loose_asset import LooseAsset
 
 
+# TODO: This class may be unnecessary
 @dataclass
-class LoosePack(AbstractPack):
+class LoosePack(Pack):
     name: str
     path: Path
 
@@ -24,21 +25,3 @@ class LoosePack(AbstractPack):
             for file in files:
                 asset = LooseAsset(name=file, path=self.path)
                 self.assets[asset.name] = asset
-
-    def __repr__(self):
-        return super().__repr__()
-
-    def __len__(self):
-        return super().__len__()
-
-    def __getitem__(self, item):
-        if isinstance(item, str):
-            return self.assets[item]
-        else:
-            raise KeyError
-
-    def __iter__(self):
-        return iter(self.assets.values())
-
-    def __contains__(self, item):
-        super().__contains__(item)

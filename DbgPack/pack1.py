@@ -1,13 +1,16 @@
 from pathlib import Path
 from typing import Dict
 
-from .abc import AbstractPack
+from .abc import Pack
 from .asset1 import Asset1
 from .struct_reader import BinaryStructReader
 
 
-class Pack1(AbstractPack):
-    name: str
+class Pack1(Pack):
+    """
+    A .pack1 asset archive used in Planetside 2 until April 2019
+    """
+    # name: str
     path: Path
 
     asset_count: int
@@ -36,21 +39,3 @@ class Pack1(AbstractPack):
 
                 self.asset_count += asset_count
                 reader.seek(next_chunk)
-
-    def __repr__(self):
-        return super().__repr__()
-
-    def __len__(self):
-        return super().__len__()
-
-    def __iter__(self):
-        return super().__iter__()
-
-    def __getitem__(self, item):
-        if isinstance(item, str):
-            return self.assets[item]
-        else:
-            raise KeyError
-
-    def __contains__(self, item):
-        super().__contains__(item)

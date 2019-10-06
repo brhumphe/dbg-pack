@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from re import fullmatch
 
-from .abc import AbstractAsset
+from .abc import Asset
 from .hash import crc64
 
 
@@ -11,7 +11,10 @@ from .hash import crc64
 
 
 @dataclass
-class LooseAsset(AbstractAsset):
+class LooseAsset(Asset):
+    """
+    A standalone file on the filesystem.
+    """
     name: str
     name_hash: int
     path: Path
@@ -35,6 +38,3 @@ class LooseAsset(AbstractAsset):
     def get_data(self, raw=False) -> bytes:
         # Ignore raw for now. Maybe we can keep these in zipped files
         return (self.path / self.name).read_bytes() if self.data_length > 0 else bytes()
-
-    def __len__(self):
-        return super().__len__()

@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, ChainMap as ChainMapType
 
-from .abc import AbstractPack, AbstractAsset
+from .abc import Pack, Asset
 from .loose_pack import LoosePack
 from .pack1 import Pack1
 from .pack2 import Pack2
@@ -11,8 +11,8 @@ from .pack2 import Pack2
 
 @dataclass
 class AssetManager:
-    packs: List[AbstractPack]
-    assets: ChainMapType[str, AbstractAsset] = field(repr=False)
+    packs: List[Pack]
+    assets: ChainMapType[str, Asset] = field(repr=False)
 
     @staticmethod
     def load_pack(path: Path, namelist: List[str] = None):

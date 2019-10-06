@@ -3,7 +3,7 @@ from os import makedirs
 from pathlib import Path
 from typing import Dict, List
 
-from .abc import AbstractPack, AbstractAsset
+from .abc import Pack, Asset
 from .asset2 import Asset2
 from .hash import crc64
 from .loose_asset import LooseAsset
@@ -19,7 +19,14 @@ _UNZIPPED_FLAGS = (0x10, 0x00)
 
 
 @dataclass
-class Pack2(AbstractPack):
+class Pack2(Pack):
+    """
+    A representation of a .pack2 file as used in Planetside 2 after April 2019
+    """
+    @classmethod
+    def from_file(cls, path: Path):
+        pass
+
     name: str
     path: Path
 
@@ -43,7 +50,7 @@ class Pack2(AbstractPack):
         self._update_assets(self._namelist)
 
     @staticmethod
-    def export(assets: List[AbstractAsset], name: str, outdir: Path, raw: bool):
+    def export(assets: List[Asset], name: str, outdir: Path, raw: bool):
         """
 
         :param assets: List of assets to export
@@ -198,15 +205,6 @@ class Pack2(AbstractPack):
                 asset = self.raw_assets[hash_]
                 self.assets[str(hash_)] = asset
 
-    def __repr__(self):
-        return super().__repr__()
-
-    def __len__(self):
-        return super().__len__()
-
-    def __iter__(self):
-        return super().__iter__()
-
     def __getitem__(self, item):
         if isinstance(item, str):
             try:
@@ -218,6 +216,3 @@ class Pack2(AbstractPack):
             return self.raw_assets[item]
         else:
             raise KeyError
-
-    def __contains__(self, item):
-        return super().__contains__(item)

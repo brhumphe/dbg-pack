@@ -1,12 +1,12 @@
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from .abc import AbstractAsset
+from .abc import Asset
 from .struct_reader import BinaryStructReader
 
 
 @dataclass
-class Asset1(AbstractAsset):
+class Asset1(Asset):
     name: str = field(default=None)
     path: Path = field(default=None)
 
@@ -26,6 +26,3 @@ class Asset1(AbstractAsset):
         with BinaryStructReader(self.path) as reader:
             reader.seek(self.offset)
             return reader.read(self.data_length)
-
-    def __len__(self):
-        return super().__len__()
