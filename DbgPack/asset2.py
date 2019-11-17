@@ -30,18 +30,20 @@ class Asset2(AbstractAsset):
 
         with BinaryStructReader(self.path) as reader:
             reader.seek(self.offset)
-            if self.is_zipped:
-                if raw:
-                    # Return raw data
-                    return reader.read(self.data_length)
+            if raw:
+                return reader.read(self.data_length)
 
+            self.is_zipped = reader.peek(len(self.ZIP_MAGIC))[:4] == self.ZIP_MAGIC
+            if self.is_zipped:
                 # return unzipped data
-                assert reader.read(len(self.ZIP_MAGIC)) == self.ZIP_MAGIC, 'invalid zip magic'
-                assert self.unzipped_length == reader.uint32BE(), 'unzipped length mismatch'
+                zip_magic = reader.read(len(self.ZIP_MAGIC))
+                assert zip_magic == self.ZIP_MAGIC, 'invalid zip magic'
+                unzipped_len = reader.uint32BE()
+                # Unzipped length may not always be set in the constructor, but user shouldn't have to always set it.
+                # assert self.unzipped_length == unzipped_len, 'unzipped length mismatch'
                 return decompress(reader.read(self.data_length))
 
             else:  # Not zipped
-                # return raw data
                 return reader.read(self.data_length)
 
     def __len__(self):
