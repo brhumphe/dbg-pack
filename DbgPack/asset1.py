@@ -12,7 +12,9 @@ class Asset1(AbstractAsset):
 
     offset: int = field(default=0)
     data_length: int = field(default=0)
-    crc32: int = field(default=0)
+    hash: int = field(default=0)
+
+    _md5: str = field(default=None)
 
     def __post_init__(self):
         assert self.name, 'name is required'
@@ -26,6 +28,10 @@ class Asset1(AbstractAsset):
         with BinaryStructReader(self.path) as reader:
             reader.seek(self.offset)
             return reader.read(self.data_length)
+
+    @property
+    def md5(self) -> str:
+        return super().md5
 
     def __len__(self):
         return super().__len__()

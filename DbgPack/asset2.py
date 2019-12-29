@@ -16,13 +16,18 @@ class Asset2(AbstractAsset):
     data_length: int = field(default=0)  # data_length should refer to stored data size
     unzipped_length: int = field(default=0)  # unzipped_length should refer to the real size
     is_zipped: bool = field(default=False)
-    crc32: int = field(default=0)
+    hash: int = field(default=0)
+
+    _md5: str = field(default=None)
 
     ZIP_MAGIC = b'\xa1\xb2\xc3\xd4'
 
     def __post_init__(self):
         assert self.name_hash, 'name_hash is required'
         assert self.path, 'path is required'
+        with BinaryStructReader(self.path) as reader:
+            reader.seek(self.offset)
+            self.is_zipped = reader.peek(len(self.ZIP_MAGIC))[:4] == self.ZIP_MAGIC
 
     def get_data(self, raw=False) -> bytes:
         if self.data_length == 0:
@@ -33,7 +38,6 @@ class Asset2(AbstractAsset):
             if raw:
                 return reader.read(self.data_length)
 
-            self.is_zipped = reader.peek(len(self.ZIP_MAGIC))[:4] == self.ZIP_MAGIC
             if self.is_zipped:
                 # return unzipped data
                 zip_magic = reader.read(len(self.ZIP_MAGIC))
@@ -45,6 +49,10 @@ class Asset2(AbstractAsset):
 
             else:  # Not zipped
                 return reader.read(self.data_length)
+
+    @property
+    def md5(self) -> str:
+        return super().md5
 
     def __len__(self):
         return super().__len__()
