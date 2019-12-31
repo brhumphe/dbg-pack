@@ -26,9 +26,6 @@ class Asset2(AbstractAsset):
     def __post_init__(self):
         assert self.name_hash, 'name_hash is required'
         assert self.path, 'path is required'
-        with BinaryStructReader(self.path) as reader:
-            reader.seek(self.offset)
-            self.is_zipped = reader.peek(len(self.ZIP_MAGIC))[:4] == self.ZIP_MAGIC
 
     def get_data(self, raw=False) -> bytes:
         if self.data_length == 0:
