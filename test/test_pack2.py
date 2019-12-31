@@ -25,7 +25,7 @@ def test_load_pack2():
     # assert asset1.asset_type == 'txt'
     assert asset1.offset == 512
     # assert len(asset1) == 149
-    assert asset1.hash == 1187660072
+    assert asset1.data_hash == 1187660072
 
     # TODO: Lookup via bytes should also work
     # asset1b = pack2v1[b'AbilityClasses.txt']

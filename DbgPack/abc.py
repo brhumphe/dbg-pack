@@ -9,7 +9,7 @@ class AbstractAsset(ABC):
     path: Path
 
     data_length: int
-    hash: int
+    data_hash: int
 
     _md5: str
 

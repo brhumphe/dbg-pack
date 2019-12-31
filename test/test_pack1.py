@@ -14,12 +14,12 @@ def test_load_asset1():
     asset1 = pack['AbilityClasses.txt']
     assert asset1.offset == 8192
     assert len(asset1) == 149
-    assert asset1.hash == 1748740018
+    assert asset1.data_hash == 1748740018
 
     asset2 = pack['Contrails_Vortex_Purple.xml']
     assert asset2.offset == 770682
     assert len(asset2) == 2563
-    assert asset2.hash == 4092021062
+    assert asset2.data_hash == 4092021062
 
 
 def test_asset1_manager():
@@ -27,9 +27,9 @@ def test_asset1_manager():
     asset1 = manager['AbilityClasses.txt']
     assert asset1.offset == 8192
     assert len(asset1) == 149
-    assert asset1.hash == 1748740018
+    assert asset1.data_hash == 1748740018
 
     asset2 = manager['Contrails_Vortex_Purple.xml']
     assert asset2.offset == 770682
     assert len(asset2) == 2563
-    assert asset2.hash == 4092021062
+    assert asset2.data_hash == 4092021062

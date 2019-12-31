@@ -31,7 +31,7 @@ class Pack1(AbstractPack):
                     data_length = reader.uint32BE()
                     file_hash = reader.uint32BE()
 
-                    asset = Asset1(name=name, path=self.path, offset=offset, data_length=data_length, hash=file_hash)
+                    asset = Asset1(name=name, path=self.path, offset=offset, data_length=data_length, data_hash=file_hash)
                     self.assets[asset.name] = asset
 
                 self.asset_count += asset_count

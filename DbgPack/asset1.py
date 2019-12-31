@@ -12,7 +12,7 @@ class Asset1(AbstractAsset):
 
     offset: int = field(default=0)
     data_length: int = field(default=0)
-    hash: int = field(default=0)
+    data_hash: int = field(default=0)
 
     _md5: str = field(default=None)
 

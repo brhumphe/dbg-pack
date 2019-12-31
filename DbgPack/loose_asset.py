@@ -17,7 +17,7 @@ class LooseAsset(AbstractAsset):
     path: Path
 
     data_length: int
-    hash: int
+    data_hash: int
 
     def __init__(self, name: str, path: Path):
         mo = fullmatch(r'(0x[a-fA-F0-9]{16}).bin', name)

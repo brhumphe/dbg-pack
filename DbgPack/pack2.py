@@ -112,7 +112,7 @@ class Pack2(AbstractPack):
                 writer.uint64LE(length)
                 writer.uint32LE(flag)
 
-                writer.uint32LE(a.hash)  # PTS doesn't care if the checksums don't match
+                writer.uint32LE(a.data_hash)  # PTS doesn't care if the checksums don't match
 
                 # Write data
                 writer.write_to(a.get_data(raw), data_offset)
@@ -140,7 +140,7 @@ class Pack2(AbstractPack):
                 offset = reader.uint64LE()
                 data_length = reader.uint64LE()  # length of stored data
                 zipped_flag = reader.uint32LE()
-                hash = reader.uint32LE()
+                data_hash = reader.uint32LE()
 
                 if zipped_flag in _ZIPPED_FLAGS and data_length > 0:
                     pos = reader.tell()
@@ -153,7 +153,7 @@ class Pack2(AbstractPack):
                     unzipped_length = 0  # This is only used if the asset is zipped
                     is_zipped = False
 
-                asset = Asset2(name_hash=name_hash, hash=hash, offset=offset, is_zipped=is_zipped,
+                asset = Asset2(name_hash=name_hash, data_hash=data_hash, offset=offset, is_zipped=is_zipped,
                                data_length=data_length, unzipped_length=unzipped_length, path=self.path)
                 self.raw_assets[asset.name_hash] = asset
 
