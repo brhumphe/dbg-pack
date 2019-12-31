@@ -16,6 +16,7 @@ class Asset2(AbstractAsset):
     data_length: int = field(default=0)  # data_length should refer to stored data size
     unzipped_length: int = field(default=0)  # unzipped_length should refer to the real size
     is_zipped: bool = field(default=False)
+    zipped_flag: int = field(default=None)
     data_hash: int = field(default=0)
 
     _md5: str = field(default=None)

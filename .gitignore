@@ -7,3 +7,4 @@ out/
 scratch.py
 .pytest_cache
 /Exported/
+__namelist__cache__

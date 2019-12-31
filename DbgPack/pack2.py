@@ -154,7 +154,8 @@ class Pack2(AbstractPack):
                     is_zipped = False
 
                 asset = Asset2(name_hash=name_hash, data_hash=data_hash, offset=offset, is_zipped=is_zipped,
-                               data_length=data_length, unzipped_length=unzipped_length, path=self.path)
+                               zipped_flag=zipped_flag, data_length=data_length, unzipped_length=unzipped_length,
+                               path=self.path)
                 self.raw_assets[asset.name_hash] = asset
 
         self.assets = {}
