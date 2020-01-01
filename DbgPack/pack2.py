@@ -151,7 +151,8 @@ class Pack2(AbstractPack):
                 self.raw_assets[asset.name_hash] = asset
 
             if calc_md5:
-                for a in self.raw_assets.values():
+                # Sort assets by offset to reduce disk thrashing
+                for a in sorted(self.raw_assets.values(), key=lambda x: x.offset):
                     hash_md5 = hashlib.md5()
                     hash_md5.update(a.get_data(reader=reader))
                     a.md5 = hash_md5.hexdigest()
