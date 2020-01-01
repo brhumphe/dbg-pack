@@ -11,24 +11,23 @@ class AbstractAsset(ABC):
     data_length: int
     data_hash: int
 
-    _md5: str
+    md5: str
 
     @abstractmethod
     def get_data(self, raw=False) -> bytes:
         pass
 
-    @property
-    @abstractmethod
-    def md5(self) -> str:
-        if self._md5 is None:
-            hash_md5 = hashlib.md5()
-            hash_md5.update(self.get_data())
-            self._md5 = hash_md5.hexdigest()
-
-        return self._md5
+    # @property
+    # @abstractmethod
+    # def md5(self) -> str:
+    #     if self._md5 is None:
+    #         hash_md5 = hashlib.md5()
+    #         hash_md5.update(self.get_data())
+    #         self._md5 = hash_md5.hexdigest()
+    #
+    #     return self._md5
 
     # This should return the stored size of the asset
-    @abstractmethod
     def __len__(self):
         return self.data_length
 

@@ -1,3 +1,4 @@
+import hashlib
 from dataclasses import dataclass
 from os import makedirs
 from pathlib import Path
@@ -122,7 +123,7 @@ class Pack2(AbstractPack):
             writer.seek(0x8, 0)
             writer.uint64LE(pack_length)
 
-    def __init__(self, path: Path, namelist: List[str] = None):
+    def __init__(self, path: Path, namelist: List[str] = None, calc_md5=False):
         super().__init__(path)
         self._namelist = namelist
 
@@ -142,31 +143,31 @@ class Pack2(AbstractPack):
                 zipped_flag = reader.uint32LE()
                 data_hash = reader.uint32LE()
 
-                if zipped_flag in _ZIPPED_FLAGS and data_length > 0:
-                    pos = reader.tell()
-                    reader.seek(offset)
-                    assert reader.read(len(Asset2.ZIP_MAGIC)) == Asset2.ZIP_MAGIC, 'zip flag mismatch with data header'
-                    is_zipped = True
-                    unzipped_length = reader.uint32BE()
-                    reader.seek(pos)
-                else:
-                    unzipped_length = 0  # This is only used if the asset is zipped
-                    is_zipped = False
+                is_zipped = zipped_flag in _ZIPPED_FLAGS and data_length > 0
 
                 asset = Asset2(name_hash=name_hash, data_hash=data_hash, offset=offset, is_zipped=is_zipped,
-                               zipped_flag=zipped_flag, data_length=data_length, unzipped_length=unzipped_length,
+                               zipped_flag=zipped_flag, data_length=data_length,  # unzipped_length=unzipped_length,
                                path=self.path)
                 self.raw_assets[asset.name_hash] = asset
+
+            if calc_md5:
+                for a in self.raw_assets.values():
+                    hash_md5 = hashlib.md5()
+                    hash_md5.update(a.get_data(reader=reader))
+                    a.md5 = hash_md5.hexdigest()
 
         self.assets = {}
         self._update_assets(self._namelist)
 
     def _update_assets(self, namelist: List[str] = None):
+        # TODO: Update name of asset during initialization instead of doing it in two passes
+        # NOTE: Would not work if taking names from a built-in namelist. Probably okay though.
         name_dict: Dict[int, str] = {}
         used_hashes = []
 
         # Check for internal namelist
         if _NAMELIST_HASH in self:
+            # TODO: Need to pass in a reader to do all reading at once instead of reopening file
             names = self.raw_assets[_NAMELIST_HASH].get_data().strip().split(b'\n')
             for n in names:
                 hash_ = crc64(n)

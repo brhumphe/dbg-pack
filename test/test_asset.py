@@ -35,13 +35,8 @@ def test_pack2_read():
     # assert binascii.crc32(a1.get_data(raw=False)) == a1.crc32
 
 
-def test_pack1_md5():
-    a1 = Asset1(name='AbilityClasses.txt', offset=8192, data_length=149, data_hash=1748740018, path=Path('sample.pack'))
-    assert a1.md5 == 'f61f9f4fe46860381a7375cb0539bc6d'
-
-
 def test_pack2_md5():
-    p2 = Pack2(Path('data_x64_0_with_namelist.pack2'))
+    p2 = Pack2(Path('data_x64_0_with_namelist.pack2'), calc_md5=True)
     a1 = p2['AbilityClasses.txt']
     assert a1.md5 == 'f61f9f4fe46860381a7375cb0539bc6d'
 
