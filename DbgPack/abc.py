@@ -8,6 +8,7 @@ class AbstractAsset(ABC):
     name: str
     path: Path
 
+    offset: int
     data_length: int
     data_hash: int
 
