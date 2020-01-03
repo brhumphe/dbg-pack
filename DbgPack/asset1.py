@@ -1,3 +1,4 @@
+import contextlib
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -20,14 +21,20 @@ class Asset1(AbstractAsset):
         assert self.name, 'name is required'
         assert self.path, 'path is required'
 
-    def get_data(self, raw=False) -> bytes:
+    def get_data(self, raw=False, reader=None) -> bytes:
         # No raw data, so just ignore it
         if self.data_length == 0:
             return bytes()
 
-        with BinaryStructReader(self.path) as reader:
-            reader.seek(self.offset)
-            return reader.read(self.data_length)
+        if reader is None:
+            cm = BinaryStructReader(self.path)
+        else:
+            # Don't reopen an open reader
+            cm = contextlib.nullcontext(reader)
+
+        with cm as r:
+            r.seek(self.offset)
+            return r.read(self.data_length)
 
     def __len__(self):
         return super().__len__()

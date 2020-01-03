@@ -194,7 +194,7 @@ class Pack2(AbstractPack):
                 # TODO: Log this more efficiently
                 pass
 
-        # Remaining assets will use their hashes aas keys
+        # Remaining assets will use their hashes as keys
         unk_assets = self.asset_count - len(self.assets)
         if unk_assets:
             for hash_ in self.raw_assets.keys() - set(used_hashes):

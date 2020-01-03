@@ -1,4 +1,5 @@
 import contextlib
+import struct
 from dataclasses import dataclass, field
 from pathlib import Path
 from zlib import decompress
@@ -9,13 +10,13 @@ from .struct_reader import BinaryStructReader
 
 @dataclass
 class Asset2(AbstractAsset):
-    name: str = field(default='')
+    name: str = field(default=None)
     path: Path = field(default=None)
 
     name_hash: int = field(default=None)
     offset: int = field(default=0)
     data_length: int = field(default=0)  # data_length should refer to stored data size
-    unzipped_length: int = field(default=0)  # unzipped_length should refer to the real size
+    unzipped_length: int = field(default=None)  # unzipped_length should refer to the real size
     is_zipped: bool = field(default=False)
     zipped_flag: int = field(default=None)
     data_hash: int = field(default=0)
@@ -45,5 +46,6 @@ class Asset2(AbstractAsset):
             if raw or data[:4] != self.ZIP_MAGIC:
                 return data
             else:
+                self.unzipped_length = struct.unpack_from('<I', data, 4)[0]
                 # Skip 8 bytes to start of zip data
                 return decompress(data[8:])

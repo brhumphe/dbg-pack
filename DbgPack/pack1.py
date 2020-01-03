@@ -1,3 +1,4 @@
+import hashlib
 from pathlib import Path
 from typing import Dict
 
@@ -13,7 +14,7 @@ class Pack1(AbstractPack):
     asset_count: int
     assets: Dict[str, Asset1]
 
-    def __init__(self, path: Path):
+    def __init__(self, path: Path, calc_md5=False):
         super().__init__(path)
 
         self.assets = {}
@@ -31,11 +32,19 @@ class Pack1(AbstractPack):
                     data_length = reader.uint32BE()
                     file_hash = reader.uint32BE()
 
-                    asset = Asset1(name=name, path=self.path, offset=offset, data_length=data_length, data_hash=file_hash)
+                    asset = Asset1(name=name, path=self.path, offset=offset, data_length=data_length,
+                                   data_hash=file_hash)
                     self.assets[asset.name] = asset
 
                 self.asset_count += asset_count
                 reader.seek(next_chunk)
+
+            if calc_md5:
+                # Sort assets by offset to reduce disk thrashing
+                for a in sorted(self.assets.values(), key=lambda x: x.offset):
+                    hash_md5 = hashlib.md5()
+                    hash_md5.update(a.get_data(reader=reader))
+                    a.md5 = hash_md5.hexdigest()
 
     def __repr__(self):
         return super().__repr__()
