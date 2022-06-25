@@ -1,7 +1,9 @@
 from collections import ChainMap
 from dataclasses import dataclass, field
+from multiprocessing import Event
 from pathlib import Path
 from typing import List, ChainMap as ChainMapType, Callable, Optional, Union
+import multiprocessing.pool as pool
 import os
 
 from .abc import AbstractPack, AbstractAsset
@@ -30,20 +32,42 @@ class AssetManager:
     def export_pack2(self, name: str, outdir: Path, raw=False):
         Pack2.export(list(self.assets.values()), name, outdir, raw)
 
-    def __init__(self, paths: List[Path], namelist: List[str] = None):
-        self.packs = [AssetManager.load_pack(path, namelist=namelist) for path in paths]
+    def __init__(self, paths: List[Path], namelist: List[str] = None, p: pool.Pool = None):
+        self.loaded = Event()
+        if p:
+            p.starmap_async(
+                AssetManager.load_pack, 
+                [[path, namelist] for path in paths],
+                callback=self.loaded_callback
+            )
+        else:
+            self.packs = [AssetManager.load_pack(path, namelist=namelist) for path in paths]
+            self.assets = ChainMap(*[p.assets for p in self.packs])
+            self.loaded.set()
+
+    def loaded_callback(self, packs: List[Union[Pack1, Pack2, LoosePack]]):
+        self.packs = packs   
         self.assets = ChainMap(*[p.assets for p in self.packs])
+        self.loaded.set()
 
     def __len__(self):
+        if not self.loaded.is_set():
+            return 0
         return len(self.assets)
 
     def __getitem__(self, item):
+        if not self.loaded.is_set():
+            raise KeyError("Assets not loaded!")
         return self.assets[item]
 
     def __contains__(self, item):
+        if not self.loaded.is_set():
+            return False
         return item in self.assets
 
     def __iter__(self):
+        if not self.loaded.is_set():
+            return iter([])
         return iter(self.assets.values())
     
     def search(self, term: str, suffix: str = ""):
@@ -124,7 +148,7 @@ class AssetManager:
                 name = str(namehash) + "." + (suffix if suffix is not None else str(magic, encoding="utf-8").strip().lower())
                 if asset.name != '':
                     name = asset.name
-                callback(i, total, PosixPath(name))
+                callback(i, total, Path(name))
                 i += 1
                 data = asset.get_data()
                 if data[:4] == magic:
