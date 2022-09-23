@@ -7,3 +7,5 @@ out/
 scratch.py
 .pytest_cache
 /Exported/
+build
+*.egg-info
