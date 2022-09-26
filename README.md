@@ -14,7 +14,7 @@ Usage:
     print("Loading packs")
     current_manager = AssetManager(glob(test_server + "/*.pack"))
     nc_helmet_male_look011 = current_manager['Helmet_NC_Male_All_Look011_LOD0_LODAuto.dme']
-    print(nc_helmet_look011)
+    print(nc_helmet_male_look011)
     
 After loading the .pack files, any asset can be loaded with `asset_manager['file_name']`
 Read the binary contents of an `Asset` via the `.data` property:
