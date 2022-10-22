@@ -179,17 +179,12 @@ class Pack2(AbstractPack):
 
         # Apply names to assets
         for name_hash, name in name_dict.items():
-            try:
+            if name_hash in self.raw_assets:
                 asset = self.raw_assets[name_hash]
                 asset.name = name
                 self.assets[asset.name] = asset
 
                 used_hashes.append(name_hash)
-
-            except KeyError:
-                # This error is spammed when using a large namelist
-                # TODO: Log this more efficiently
-                pass
 
         # Remaining assets will use their hashes aas keys
         unk_assets = self.asset_count - len(self.assets)
