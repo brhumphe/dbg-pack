@@ -34,8 +34,9 @@ class AssetManager:
 
     def __init__(self, paths: List[Path], namelist: List[str] = None, p: pool.Pool = None):
         self.loaded = Event()
-        if p:
-            p.starmap_async(
+        self.pool = p
+        if self.pool:
+            self.pool.starmap_async(
                 AssetManager.load_pack, 
                 [[path, namelist] for path in paths],
                 callback=self.loaded_callback
@@ -49,6 +50,9 @@ class AssetManager:
         self.packs = packs   
         self.assets = ChainMap(*[p.assets for p in self.packs])
         self.loaded.set()
+    
+    def refresh_assets(self, *_):
+        self.assets = ChainMap(*[p.assets for p in self.packs])
 
     def __len__(self):
         if not self.loaded.is_set():
